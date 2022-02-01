@@ -1,22 +1,147 @@
+//
+//  main.cpp
+//  COEN346 CLI
+//
+//  Created by Rohit Vaidya on 2022-01-26.
+//
+
 #include <iostream>
 #include <stdio.h>
 #include <string>
+#include <fstream>
+
 
 using namespace std;
 
-int main() {
-    string command = "dir";
-    char buff[128];
-    string result = "";
-    FILE* pipe = popen(command.c_str(), "r");
+string username = "";
+string hostname = "";
+string path = "";
+
+void startUp(){
+    fstream myFile;
+    string startup = "coen346UserInfo.txt";
+    myFile.open(startup.c_str(),ios::in);
     
-    while(!feof(pipe)){
-        
-        if(fgets(buff,128,pipe)!=NULL);
-        result += buff;
-        
+    if(!myFile){
+        cout<<"User Info File does not exist"<<endl;
     }
-    cout<<result<<endl;
-    pclose(pipe);
+    else{
+        string line;
+        while(1){
+            //read each line from the input file
+            for(int i=0; std::getline(myFile,line);i++){
+                if(i==0){
+                    username += line;
+                    line = "";
+                }
+                if(i==1){
+                    hostname += line;
+                    line = "";
+                }
+                if(i==2){
+                    path += line;
+                    line = "";
+                }
+            }
+                
+            if(myFile.eof())
+                break;
+            
+        }
+
+    }
+    myFile.close();
+}
+
+void newFileCreation(string command,string echoCommand){
+    
+    //find start of file name
+    long pos = command.find_last_of(">");
+    string fileName = command.substr(pos+1);
+    fstream file;
+    file.open(fileName.c_str(),ios::out);
+    if(!file){
+        cout<<"File was not created"<<endl;
+    }
+    else{
+        file<<echoCommand;
+        file.close();
+    }
     
 }
+
+void appendFile(string command,string echoCommand){
+    
+    //find start of file name
+    long pos = command.find_last_of(">");
+    string fileName = command.substr(pos+1);
+    ofstream file;
+    file.open(fileName.c_str(),ios::app);
+    file<<"\n"<<echoCommand;
+    file.close();
+    
+}
+
+void readCommand(string command){
+   
+    char ch[command.length()];
+    string commandWord = "";
+    string echoCommand = "";
+    //convert command string to char array
+    strcpy(ch, command.c_str());
+    
+    for(int i = 0; ch[i] !=' '; i++){
+        commandWord += ch[i];
+    }
+    
+    if(commandWord == "echo"){
+        long startOfText = command.find_first_of("\"");
+        long endOfText = command.find_last_of("\"");
+        long lengthOfText = endOfText-startOfText-1;
+        
+        echoCommand = command.substr(startOfText+1,lengthOfText); //extract output string
+            
+        // Check if output needs to be redirected to a file
+        if(command.find("->") != string::npos){
+            cout<<echoCommand<<endl;
+            newFileCreation(command,echoCommand);
+        }
+            
+        else
+            cout<<echoCommand<<endl;
+    }
+
+}
+
+
+int main() {
+    
+    string command = "";
+    char buff[128];
+    string result = "";
+    startUp();
+    
+    do{
+        
+        cout<<username<<"@"<<hostname<<"$"<<" ";
+        getline(cin,command);
+        readCommand(command);
+       
+        /*
+        FILE* pipe = popen(command.c_str(), "r");
+        while(!feof(pipe)){
+            
+            if(fgets(buff,128,pipe)!=NULL){
+            result += buff;
+            }
+        }
+        cout<<result<<endl;
+        pclose(pipe);
+         */
+    }while(command != "exit");
+    
+    
+    
+}
+
+
