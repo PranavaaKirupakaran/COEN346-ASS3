@@ -72,7 +72,7 @@ void startUp(){
     }
     
     //Make sure path variable stores only actual file paths
-    path = path.substr(path.find_first_of('/'));
+    path = path.substr(path.find_first_of('=')+1);
     myFile.close();
 }
 
