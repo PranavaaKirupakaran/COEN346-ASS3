@@ -21,6 +21,56 @@ string username = "";
 string hostname = "";
 string path = "";
 
+void newFileCreation(string command,string echoCommand){
+    
+    cout<<"Create called"<<endl;
+    //find start of file name
+    long pos = command.find_last_of(">");
+    string fileName = command.substr(pos+1);
+    fstream file;
+    file.open(fileName.c_str(),ios::out);
+    if(!file){
+        cout<<"File was not created"<<endl;
+    }
+    else{
+        file<<echoCommand<<"\n";
+        file.close();
+    }
+
+}
+
+void appendFile(string command,string echoCommand){
+    
+    //find start of file name
+    cout<<"Append called"<<endl;
+    long pos = command.find_last_of(">");
+    string fileName = command.substr(pos+1);
+    fstream file;
+    file.open(fileName.c_str(),ios::app);
+    if(file){
+        file<<echoCommand;
+    }
+    
+}
+
+int appendInfo(string command){
+    
+    char ch[command.length()];
+    strcpy(ch,command.c_str());
+    // Check if output needs to be appended to a file
+    long appendCheck = command.find_last_of(">");
+    
+    //check if '>' is preceeded by '>'
+    if(ch[appendCheck-1]=='>' & ch[appendCheck-2]=='-')
+        return 0;
+    
+    // Check if output needs to be redirected to a file
+    else if(ch[appendCheck-1]=='-')
+        return 1;
+    else
+        return 2;
+}
+
 void threadTesting(string s){
     
     string filepath = path + s;
@@ -30,9 +80,24 @@ void threadTesting(string s){
     
 }
 
-void filePathThread(string filepath){
+//Update as necessary
+void filePathThread(string filepath, int appendType){
     
+    char buff[128];
+    string result = "";
     FILE* pipe = popen(filepath.c_str(),"r");
+    
+    while (!feof(pipe)) {
+            
+        if (fgets(buff, 128, pipe) != NULL) {
+                result += buff;
+            }
+    }
+    
+    if(appendType == 0)
+        appendFile(filepath, result);
+    else if(appendType == 1)
+        newFileCreation(filepath, result);
     pclose(pipe);
 
 }
@@ -76,46 +141,17 @@ void startUp(){
     myFile.close();
 }
 
-void newFileCreation(string command,string echoCommand){
-    
-    cout<<"Create called"<<endl;
-    //find start of file name
-    long pos = command.find_last_of(">");
-    string fileName = command.substr(pos+1);
-    fstream file;
-    file.open(fileName.c_str(),ios::out);
-    if(!file){
-        cout<<"File was not created"<<endl;
-    }
-    else{
-        file<<echoCommand<<"\n";
-        file.close();
-    }
-
-}
-
-void appendFile(string command,string echoCommand){
-    
-    //find start of file name
-    cout<<"Append called"<<endl;
-    long pos = command.find_last_of(">");
-    string fileName = command.substr(pos+1);
-    fstream file;
-    file.open(fileName.c_str(),ios::app);
-    if(file){
-        file<<echoCommand;
-    }
-    
-}
-
 void readCommand(string command){
     
     string commandWord;
     string echoValue = "";
     char ch[command.length()];
+    int appendType = 2;
     
     strcpy(ch,command.c_str());
     commandWord = command.substr(0,command.find_first_of(" "));
+    
+    appendType = appendInfo(command);
     
     if(commandWord == "echo"){
         
@@ -124,15 +160,12 @@ void readCommand(string command){
         long lengthOfText = endOfText-startOfText-1;
 
         echoValue = command.substr(startOfText+1,lengthOfText); //extract output string
-
-        // Check if output needs to be appended to a file
-        long appendCheck = command.find_last_of(">");
-        //check if '>' is preceeded by '>'
-        if(ch[appendCheck-1]=='>' & ch[appendCheck-2]=='-'){
+        
+        if(appendType == 0){
             appendFile(command,echoValue);
         }
         // Check if output needs to be redirected to a file
-        else if(ch[appendCheck-1]=='-')
+        else if(appendType == 1)
             newFileCreation(command,echoValue);
         else
             cout<<echoValue<<endl;
@@ -140,7 +173,7 @@ void readCommand(string command){
     }
     
     else if(command.find("/") == 0){
-        thread th(filePathThread,command);
+        thread th(filePathThread,command,appendType);
         th.join();
         
     }
@@ -160,6 +193,5 @@ int main() {
     }while(command != "exit");
     
 }
-
 
 
