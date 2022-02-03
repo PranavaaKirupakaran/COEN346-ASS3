@@ -8,14 +8,34 @@
 #include <iostream>
 #include <stdio.h>
 #include <string>
+#include <unistd.h>
 #include <fstream>
+#include <thread>
 
+//Multiple file paths not yet included, Only single file path works
+//Store executable output in file not done
 
 using namespace std;
 
 string username = "";
 string hostname = "";
 string path = "";
+
+void threadTesting(string s){
+    
+    string filepath = path + s;
+    FILE* pipe = popen(filepath.c_str(),"r");
+    pclose(pipe);
+    filepath = path;
+    
+}
+
+void filePathThread(string filepath){
+    
+    FILE* pipe = popen(filepath.c_str(),"r");
+    pclose(pipe);
+
+}
 
 void startUp(){
     fstream myFile;
@@ -46,15 +66,19 @@ void startUp(){
                 
             if(myFile.eof())
                 break;
-            
+
         }
 
     }
+    
+    //Make sure path variable stores only actual file paths
+    path = path.substr(path.find_first_of('/'));
     myFile.close();
 }
 
 void newFileCreation(string command,string echoCommand){
     
+    cout<<"Create called"<<endl;
     //find start of file name
     long pos = command.find_last_of(">");
     string fileName = command.substr(pos+1);
@@ -64,84 +88,78 @@ void newFileCreation(string command,string echoCommand){
         cout<<"File was not created"<<endl;
     }
     else{
-        file<<echoCommand;
+        file<<echoCommand<<"\n";
         file.close();
     }
-    
+
 }
 
 void appendFile(string command,string echoCommand){
     
     //find start of file name
+    cout<<"Append called"<<endl;
     long pos = command.find_last_of(">");
     string fileName = command.substr(pos+1);
-    ofstream file;
+    fstream file;
     file.open(fileName.c_str(),ios::app);
-    file<<"\n"<<echoCommand;
-    file.close();
+    if(file){
+        file<<echoCommand;
+    }
     
 }
 
 void readCommand(string command){
-   
-    char ch[command.length()];
-    string commandWord = "";
-    string echoCommand = "";
-    //convert command string to char array
-    strcpy(ch, command.c_str());
     
-    for(int i = 0; ch[i] !=' '; i++){
-        commandWord += ch[i];
-    }
+    string commandWord;
+    string echoValue = "";
+    char ch[command.length()];
+    
+    strcpy(ch,command.c_str());
+    commandWord = command.substr(0,command.find_first_of(" "));
     
     if(commandWord == "echo"){
+        
         long startOfText = command.find_first_of("\"");
         long endOfText = command.find_last_of("\"");
         long lengthOfText = endOfText-startOfText-1;
-        
-        echoCommand = command.substr(startOfText+1,lengthOfText); //extract output string
-            
-        // Check if output needs to be redirected to a file
-        if(command.find("->") != string::npos){
-            cout<<echoCommand<<endl;
-            newFileCreation(command,echoCommand);
+
+        echoValue = command.substr(startOfText+1,lengthOfText); //extract output string
+
+        // Check if output needs to be appended to a file
+        long appendCheck = command.find_last_of(">");
+        //check if '>' is preceeded by '>'
+        if(ch[appendCheck-1]=='>' & ch[appendCheck-2]=='-'){
+            appendFile(command,echoValue);
         }
-            
+        // Check if output needs to be redirected to a file
+        else if(ch[appendCheck-1]=='-')
+            newFileCreation(command,echoValue);
         else
-            cout<<echoCommand<<endl;
+            cout<<echoValue<<endl;
+
     }
-
+    
+    else if(command.find("/") == 0){
+        thread th(filePathThread,command);
+        th.join();
+        
+    }
 }
-
 
 int main() {
     
     string command = "";
-    char buff[128];
-    string result = "";
+    //Initialise user data from input file
     startUp();
     
     do{
-        
         cout<<username<<"@"<<hostname<<"$"<<" ";
         getline(cin,command);
         readCommand(command);
-       
-        /*
-        FILE* pipe = popen(command.c_str(), "r");
-        while(!feof(pipe)){
-            
-            if(fgets(buff,128,pipe)!=NULL){
-            result += buff;
-            }
-        }
-        cout<<result<<endl;
-        pclose(pipe);
-         */
+        
     }while(command != "exit");
     
-    
-    
 }
+
 
 
