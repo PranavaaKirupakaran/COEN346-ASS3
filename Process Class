@@ -1,10 +1,11 @@
 //
-//  main.cpp
+//  Process.cpp
 //  COEN346Scheduler
 //
 //  Created by Rohit Vaidya on 2022-03-09.
 //
 
+#include "Process.hpp"
 #include <iostream>
 #include <stdio.h>
 using namespace std;
@@ -12,15 +13,15 @@ using namespace std;
 class Process{
 private:
     string process_id;
-    int wait_time,burst_time, priority;
+    int arrival_time,burst_time, priority;
     
 public:
-    Process()
+    Process(string name, int arrive, int burst, int pri)
     {
-        process_id = "";
-        wait_time = 0;
-        burst_time = 0;
-        priority = 0;
+        process_id = name;
+        arrival_time = arrive;
+        burst_time = burst;
+        priority = pri;
     }
     
     void processID(string name)
@@ -28,9 +29,9 @@ public:
         process_id = name;
     }
     
-    void addWaitTime(int wait)
+    void addArrivalTime(int wait)
     {
-        wait_time = wait;
+        arrival_time = wait;
     }
     
     void addBurstTime(int burst)
@@ -43,9 +44,9 @@ public:
         priority = time;
     }
     
-    int getWaitTime(int wait)
+    int getArrivalTime(int wait)
     {
-        return wait_time;
+        return arrival_time;
     }
     
     int getBurstTime(int burst)
