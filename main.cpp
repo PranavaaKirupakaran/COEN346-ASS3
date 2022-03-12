@@ -6,11 +6,12 @@
 //
 
 #include <unistd.h>
-#include "Process.h"
+#include "Process.cpp"
 #include <iostream>
 #include <stdio.h>
 #include <fstream>
 #include <queue>
+
 using namespace std;
 
 void startUp();
