@@ -5,11 +5,12 @@
 //  Created by Rohit Vaidya on 2022-03-09.
 //
 
-#ifndef Process_h
-#define Process_h
+#ifndef PROCESS_H
+#define PROCESS_H
 
 #include <stdio.h>
 #include <string>
+
 
 class Process{
     private:
