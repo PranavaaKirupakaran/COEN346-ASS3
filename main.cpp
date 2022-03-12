@@ -5,6 +5,7 @@
 //  Created by Rohit Vaidya on 2022-03-09.
 //
 
+#include <unistd.h>
 #include "Process.hpp"
 #include "Process.cpp"
 #include <iostream>
@@ -13,9 +14,20 @@
 #include <queue>
 using namespace std;
 
+void startUp();
+void updateClock();
+
+int clck;
 int process_count;
 queue<Process> q1;
 queue<Process> q2;
+queue<Process> processList;
+
+int main(){
+
+    startUp();
+
+}
 
 void startUp()
 {
@@ -44,7 +56,7 @@ void startUp()
                         line = line.substr(line.find_first_of(" ")+1);
                         int priority = stoi(line.substr(0,line.find_first_of("\n")));
                         cout<< arrival<<" "<<burst<<" "<<priority<<endl;
-                        q1.push(Process(p_id,arrival,burst,priority));
+                        processList.push(Process(p_id,arrival,burst,priority));
                         line = "";
                     }
                 }
@@ -55,8 +67,11 @@ void startUp()
         }
 }
 
-int main(){
-
-    startUp();
+void updateClock()  {
+    while (true)    {
+        sleep(0.1);
+        clck++;
+        cout << clck << endl;
+    }
 }
 
