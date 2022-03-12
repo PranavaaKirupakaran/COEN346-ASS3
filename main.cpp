@@ -6,8 +6,7 @@
 //
 
 #include <unistd.h>
-#include "Process.hpp"
-#include "Process.cpp"
+#include "Process.h"
 #include <iostream>
 #include <stdio.h>
 #include <fstream>
