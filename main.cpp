@@ -7,6 +7,7 @@
 
 #include <unistd.h>
 #include "Process.cpp"
+#include "ProcessQueue.h"
 #include <iostream>
 #include <stdio.h>
 #include <fstream>
@@ -19,8 +20,8 @@ void updateClock();
 
 int clck;
 int process_count;
-queue<Process> q1;
-queue<Process> q2;
+ProcessQueue q1(true);
+ProcessQueue q2(false);
 queue<Process> processList;
 
 int main(){
