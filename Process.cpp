@@ -105,7 +105,7 @@ void Process::execute(){
         }
         else if(state == "STARTED"){
             if(prevState != state){
-                startTimeSlice = clk->getTime();
+                startTimeSlice = clk->getTime()*100;
                 cpu_iteration += 1;
                 waiting_time += arrival_time - startTimeSlice;
                 prevState = state;
@@ -113,7 +113,7 @@ void Process::execute(){
         }
         else if(state == "PAUSED"){
             if(prevState != state){
-                endTimeSlice = clk->getTime();
+                endTimeSlice = clk->getTime()*100;
                 deltaTimeSlice = endTimeSlice - startTimeSlice;
                 burst_time -= deltaTimeSlice;
                 if(burst_time <= 0){
@@ -130,7 +130,7 @@ void Process::execute(){
         }
         else if(state == "RESUMED"){
             if(prevState != state){
-                startTimeSlice = clk->getTime();
+                startTimeSlice = clk->getTime()*100;
                 cpu_iteration += 1;
                 waiting_time += startTimeSlice - endTimeSlice;
                 prevState = state;

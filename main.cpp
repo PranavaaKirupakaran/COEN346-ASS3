@@ -7,7 +7,7 @@
 #include <unistd.h>
 //#include "Process.cpp"
 #include "ProcessQueue.cpp"
-#include "Clock.cpp"
+//#include "Clock.cpp"
 #include <iostream>
 #include <stdio.h>
 #include <fstream>
@@ -29,18 +29,24 @@ vector<thread> threadList;
 
 int main(){
 
-    //startUp();
-    //thread th(&Process::execute,processList.front());
-    //threadList.push_back(move(th));
-    //q2.printQueue();
-    //q2.sort();
-    //q2.printQueue();
-
+    startUp();
     Clock* timer = new Clock();
+    processList.front()->setClock(timer);
     thread th2(&Clock::startClock, timer);
-    this_thread::sleep_for(chrono::milliseconds(1000));
+    this_thread::sleep_for(chrono::milliseconds(1100));
+    processList.front()->setState("STARTED");
+    thread th(&Process::execute,processList.front());
+    this_thread::sleep_for(chrono::milliseconds(1100));
+    processList.front()->setState("PAUSED");
+    this_thread::sleep_for(chrono::milliseconds(1100));
+    processList.front()->setState("RESUMED");
+    this_thread::sleep_for(chrono::milliseconds(1600));
+    processList.front()->setState("PAUSED");
     timer->setStartFlag(false);
+
+    th.join();
     th2.join();
+    
 
 }
 
