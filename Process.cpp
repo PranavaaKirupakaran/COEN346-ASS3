@@ -26,6 +26,10 @@ Process::Process(std::string id, int arrivalTime, int burstTime, int p){
     waiting_time, cpu_iteration = 0;
 }
 
+Process::~Process(){
+    
+}
+
 void Process::setProcessID(std::string processID){
     process_id = processID;
 }

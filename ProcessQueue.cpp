@@ -2,8 +2,16 @@
 
 using namespace std;
 
+ProcessQueue::ProcessQueue(){
+    flag = true;
+}
+
 ProcessQueue::ProcessQueue(bool active){
     flag = active;
+}
+
+ProcessQueue::~ProcessQueue(){
+    
 }
 
 void ProcessQueue::addProcess(Process p){
