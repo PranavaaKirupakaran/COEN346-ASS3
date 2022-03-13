@@ -7,6 +7,7 @@
 #include <unistd.h>
 //#include "Process.cpp"
 #include "ProcessQueue.cpp"
+#include "Clock.cpp"
 #include <iostream>
 #include <stdio.h>
 #include <fstream>
@@ -28,12 +29,20 @@ vector<thread> threadList;
 
 int main(){
 
-    startUp();
+    //startUp();
     //thread th(&Process::execute,processList.front());
     //threadList.push_back(move(th));
-    q2.printQueue();
-    q2.sort();
-    q2.printQueue();
+    //q2.printQueue();
+    //q2.sort();
+    //q2.printQueue();
+
+    Clock* timer = new Clock();
+    cout << "Start Clock" << endl;
+    thread th2(&Clock::startClock, timer);
+    this_thread::sleep_for(chrono::milliseconds(1000));
+    timer->setStartFlag(false);
+    th2.join();
+    cout << "Stop Clock" << endl;
 
 }
 

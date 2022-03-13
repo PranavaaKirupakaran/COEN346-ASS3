@@ -15,7 +15,9 @@ class ProcessQueue{
         bool flag;
 
     public:
+        ProcessQueue();
         ProcessQueue(bool active);
+        ~ProcessQueue();
         void addProcess(Process p);
         Process removeProcess();
         void updateFlag();

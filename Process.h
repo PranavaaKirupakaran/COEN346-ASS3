@@ -20,6 +20,7 @@ class Process{
     public:
         Process(); 
         Process(std::string id, int arrivalTime, int burstTime, int p);
+        ~Process();
         void setProcessID(std::string processID);
         std::string getProcessID();
         void setArrivalTime(int arrivalTime);
