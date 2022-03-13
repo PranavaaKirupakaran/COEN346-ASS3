@@ -37,12 +37,10 @@ int main(){
     //q2.printQueue();
 
     Clock* timer = new Clock();
-    cout << "Start Clock" << endl;
     thread th2(&Clock::startClock, timer);
     this_thread::sleep_for(chrono::milliseconds(1000));
     timer->setStartFlag(false);
     th2.join();
-    cout << "Stop Clock" << endl;
 
 }
 

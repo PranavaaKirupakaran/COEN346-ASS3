@@ -33,10 +33,12 @@ bool Clock::getStartFlag(){
 }
 
 void Clock::startClock(){
+    std::cout << "Start Clock" << std::endl;
     while(startFlag){
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
         time += 1;
         std::cout << time << std::endl;
     }
+    std::cout << "Stop Clock" << std::endl;
 }
 
