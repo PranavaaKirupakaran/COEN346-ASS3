@@ -4,21 +4,25 @@
 #include <iostream>
 #include <stdio.h>
 #include <queue>
-#include <thread>
+#include "Process.cpp"
 
 using namespace std;
 
 class ProcessQueue{
 
     private:
-        queue<thread> TH;
+        queue<Process> plist;
         bool flag;
 
     public:
         ProcessQueue(bool active);
-        void addProcess(thread th);
-        thread removeProcess();
+        void addProcess(Process p);
+        Process removeProcess();
         void updateFlag();
+        int minIndex(int sortedIndex);
+        void insertMinToRear(int min_index);
+        void sort();
+        void printQueue();
         
 
 };

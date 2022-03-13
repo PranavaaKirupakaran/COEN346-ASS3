@@ -14,7 +14,7 @@
 
 class Process{
     private:
-        std::string process_id;
+        std::string process_id, state;
         int arrival_time, burst_time, priority, waiting_time, cpu_iteration;
 
     public:
@@ -32,6 +32,9 @@ class Process{
         int getWaitingTime();
         void setCpuIteration(int iteration);
         int getCpuIteration();
+        void setState(std::string status);
+        std::string getState();
+        void execute();
 
 };
 
