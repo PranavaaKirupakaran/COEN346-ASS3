@@ -4,14 +4,15 @@
 //
 //  Created by Rohit Vaidya on 2022-03-09.
 //
-
 #include <unistd.h>
-#include "Process.cpp"
-#include "ProcessQueue.h"
+//#include "Process.cpp"
+#include "ProcessQueue.cpp"
 #include <iostream>
 #include <stdio.h>
 #include <fstream>
 #include <queue>
+#include <thread>
+#include <vector>
 
 using namespace std;
 
@@ -22,11 +23,17 @@ int clck;
 int process_count;
 ProcessQueue q1(true);
 ProcessQueue q2(false);
-queue<Process> processList;
+queue<Process*> processList;
+vector<thread> threadList;
 
 int main(){
 
     startUp();
+    //thread th(&Process::execute,processList.front());
+    //threadList.push_back(move(th));
+    q2.printQueue();
+    q2.sort();
+    q2.printQueue();
 
 }
 
@@ -56,8 +63,10 @@ void startUp()
                         int burst = stoi(line.substr(0,line.find_first_of(" ")));
                         line = line.substr(line.find_first_of(" ")+1);
                         int priority = stoi(line.substr(0,line.find_first_of("\n")));
-                        cout<< arrival<<" "<<burst<<" "<<priority<<endl;
-                        processList.push(Process(p_id,arrival,burst,priority));
+                        //cout<< arrival<<" "<<burst<<" "<<priority<<endl;
+                        Process* tempProcess = new Process(p_id,arrival,burst,priority);
+                        processList.push(tempProcess);
+                        q2.addProcess(*tempProcess);
                         line = "";
                     }
                 }
