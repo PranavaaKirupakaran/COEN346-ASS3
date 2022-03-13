@@ -86,19 +86,61 @@ string Process::getState(){
     return state;
 }
 
+void Process::setClock(Clock* timer){
+    clk = timer;
+}
+
+Clock* Process::getClock(){
+    return clk;
+}
+
 void Process::execute(){
+    int startTimeSlice, endTimeSlice, deltaTimeSlice = 0;
+    string prevState = "";
     while(true){
-        if(state == "STARTED"){
+        if(state == "ARRIVED"){
+
+            cout << "TIME " << arrival_time << ", " << process_id << " " << state << endl;
 
         }
+        else if(state == "STARTED"){
+            if(prevState != state){
+                startTimeSlice = clk->getTime();
+                cpu_iteration += 1;
+                waiting_time += arrival_time - startTimeSlice;
+                prevState = state;
+            }
+        }
         else if(state == "PAUSED"){
+            if(prevState != state){
+                endTimeSlice = clk->getTime();
+                deltaTimeSlice = endTimeSlice - startTimeSlice;
+                burst_time -= deltaTimeSlice;
+                if(burst_time <= 0){
+                    state = "TERMINATED";
+                }
+                else{
+                    cout << "TIME " << startTimeSlice << ", " << process_id << " " << prevState << ", GRANTED " << deltaTimeSlice << endl;
+                    cout << "TIME " << endTimeSlice << ", " << process_id << " " << state << endl;
+                    prevState = state;
+                }
+
+            }
 
         }
         else if(state == "RESUMED"){
-
+            if(prevState != state){
+                startTimeSlice = clk->getTime();
+                cpu_iteration += 1;
+                waiting_time += startTimeSlice - endTimeSlice;
+                prevState = state;
+            }
         }
-        else if(state == "TERMINATED"){
-
+        
+        if(state == "TERMINATED"){
+            cout << "TIME " << startTimeSlice << ", " << process_id << " " << prevState << ", GRANTED " << deltaTimeSlice << endl;
+            cout << "TIME " << endTimeSlice << ", " << process_id << " " << state << endl;
+            break;
         }
     }
 }
