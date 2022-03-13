@@ -10,12 +10,14 @@
 
 #include <stdio.h>
 #include <string>
+#include "Clock.cpp"
 
 
 class Process{
     private:
         std::string process_id, state;
         int arrival_time, burst_time, priority, waiting_time, cpu_iteration;
+        Clock* clk;
 
     public:
         Process(); 
@@ -35,6 +37,8 @@ class Process{
         int getCpuIteration();
         void setState(std::string status);
         std::string getState();
+        void setClock(Clock* timer);
+        Clock* getClock();
         void execute();
 
 };
