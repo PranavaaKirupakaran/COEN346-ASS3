@@ -1,4 +1,11 @@
-#include "ProcessQueue.h"
+//
+//  ProcessQueue.cpp
+//  COEN346Scheduler
+//
+//  Created by Rohit Vaidya on 2022-03-12.
+//
+
+#include "ProcessQueue.hpp"
 
 using namespace std;
 
@@ -14,18 +21,20 @@ ProcessQueue::~ProcessQueue(){
     
 }
 
-void ProcessQueue::addProcess(Process p){
+void ProcessQueue::addProcess(Process* p){
     plist.push(p);
 }
 
 void ProcessQueue::updateFlag(){
-    if(plist.empty()){
-        flag = !flag;
-    }
+    flag = !flag;
 }
 
-Process ProcessQueue::removeProcess(){
-    Process temp = plist.front();
+bool ProcessQueue::getFlag(){
+    return flag;
+}
+
+Process* ProcessQueue::removeProcess(){
+    Process* temp = plist.front();
     plist.pop();
     return temp;
 }
@@ -37,17 +46,17 @@ int ProcessQueue::minIndex(int sortedIndex)
     int n = plist.size();
     for (int i=0; i<n; i++)
     {
-        Process curr = plist.front();
+        Process* curr = plist.front();
         plist.pop();  // This is dequeue() in C++ STL
  
         // we add the condition i <= sortedIndex
         // because we don't want to traverse
         // on the sorted part of the queue,
         // which is the right part.
-        if (curr.getPriority() <= min_val && i <= sortedIndex)
+        if (curr->getPriority() <= min_val && i <= sortedIndex)
         {
             min_index = i;
-            min_val = curr.getPriority();
+            min_val = curr->getPriority();
         }
         plist.push(curr);  // This is enqueue() in
                        // C++ STL
@@ -59,11 +68,11 @@ int ProcessQueue::minIndex(int sortedIndex)
 // queue
 void ProcessQueue::insertMinToRear(int min_index)
 {
-    Process min_val;
+    Process* min_val;
     int n = plist.size();
     for (int i = 0; i < n; i++)
     {
-        Process curr = plist.front();
+        Process* curr = plist.front();
         plist.pop();
         if (i != min_index)
             plist.push(curr);
@@ -83,11 +92,15 @@ void ProcessQueue::sort()
 }
 
 void ProcessQueue::printQueue(){
-    Process temp;
-    queue<Process> tempList = plist;
+    Process* temp;
+    queue<Process*> tempList = plist;
     while(!tempList.empty()){
         temp = tempList.front();
         tempList.pop();
-        cout << "PID: " << temp.getProcessID() <<" Priority: " << temp.getPriority() << endl;
+        cout << "PID: " << temp->getProcessID() <<" Priority: " << temp->getPriority() << endl;
     }
+}
+
+bool ProcessQueue::checkEmpty(){
+    return plist.empty();
 }
