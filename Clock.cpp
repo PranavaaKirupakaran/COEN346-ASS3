@@ -1,4 +1,11 @@
-#include "Clock.h"
+//
+//  Clock.cpp
+//  COEN346Scheduler
+//
+//  Created by Rohit Vaidya on 2022-03-13.
+//
+
+#include "Clock.hpp"
 #include <thread>
 #include <chrono>
 
@@ -17,11 +24,16 @@ Clock::~Clock(){
 }
 
 void Clock::setTime(int value){
+    m.lock();
     time = value;
+    m.unlock();
 }
 
 int Clock::getTime(){
-    return time;
+    m.lock();
+    int temp = time;
+    m.unlock();
+    return temp;
 }
 
 void Clock::setStartFlag(bool flag){
@@ -36,8 +48,10 @@ void Clock::startClock(){
     std::cout << "Start Clock" << std::endl;
     while(startFlag){
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
+        m.lock();
         time += 1;
         //std::cout << time << std::endl;
+        m.unlock();
     }
     std::cout << "Stop Clock" << std::endl;
 }
