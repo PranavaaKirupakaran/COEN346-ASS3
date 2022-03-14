@@ -11,16 +11,18 @@
 #include <stdio.h>
 #include <string>
 #include "Clock.cpp"
+#include <mutex>
 
 
 class Process{
     private:
         std::string process_id, state;
         int arrival_time, burst_time, priority, waiting_time, cpu_iteration;
+        std::mutex m;
         Clock* clk;
 
     public:
-        Process(); 
+        Process();
         Process(std::string id, int arrivalTime, int burstTime, int p);
         ~Process();
         void setProcessID(std::string processID);
