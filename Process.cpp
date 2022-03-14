@@ -5,7 +5,7 @@
 //  Created by Rohit Vaidya on 2022-03-09.
 //
 
-#include "Process.hpp"
+#include "Process.h"
 #include <iostream>
 #include <stdio.h>
 #include <string>
@@ -100,119 +100,61 @@ Clock* Process::getClock(){
     return clk;
 }
 
-/*void Process::execute(){
+void Process::execute(){
     int startTimeSlice = 0, endTimeSlice = 0, deltaTimeSlice = 0;
     string prevState = "";
     while(true){
         if(state == "ARRIVED"){
 
             cout << "TIME " << arrival_time << ", " << process_id << " " << state << endl;
-
-        }
-        else if(state == "STARTED"){
-            if(prevState != state){
-                startTimeSlice = clk->getTime()*100;
-                cpu_iteration += 1;
-                waiting_time += arrival_time - startTimeSlice;
-                cout << "TIME " << startTimeSlice << ", " << process_id << " " << state;
-                prevState = state;
-                
-            }
-        }
-        else if(state == "PAUSED"){
-            if(prevState != state){
-                endTimeSlice = clk->getTime()*100;
-                deltaTimeSlice = endTimeSlice - startTimeSlice;
-                burst_time -= deltaTimeSlice;
-                if(burst_time <= 0){
-                    state = "TERMINATED";
-                }
-                else{
-                    //cout << "TIME " << startTimeSlice << ", " << process_id << " " << prevState << ", GRANTED " << deltaTimeSlice << endl;
-                    cout << ", GRANTED " << deltaTimeSlice << endl;
-                    cout << "TIME " << endTimeSlice << ", " << process_id << " " << state << endl;
-                    prevState = state;
-                }
+            while(state == "ARRIVED"){
 
             }
 
         }
-        else if(state == "RESUMED"){
-            if(prevState != state){
-                startTimeSlice = clk->getTime()*100;
-                cpu_iteration += 1;
-                waiting_time += startTimeSlice - endTimeSlice;
-                cout << "TIME " << startTimeSlice << ", " << process_id << " " << state;
-                prevState = state;
-                
-            }
-        }
-        
-        if(state == "TERMINATED"){
-            cout << "TIME " << startTimeSlice << ", " << process_id << " " << prevState << ", GRANTED " << deltaTimeSlice << endl;
-            cout << "TIME " << endTimeSlice << ", " << process_id << " " << state << endl;
-            break;
-        }
-    }
-}*/
-
-void Process::execute(){
-    int startTimeSlice = 0, endTimeSlice = 0, deltaTimeSlice = 0;
-    string prevState = "";
-    while(true){
-        if(state == "ARRIVED")
-            cout << "TIME " << (clk->getTime()*100) << ", " << process_id << " " << state << endl;
-        
         if(state == "STARTED"){
-            
-            if(prevState!=state){
-                startTimeSlice = (clk->getTime()*100);
-                ++cpu_iteration;
-                waiting_time += arrival_time - startTimeSlice;
-                prevState = state;
+            startTimeSlice = clk->getTime();
+            cout << startTimeSlice << "in STARTED" << endl;  
+            cpu_iteration += 1;
+            waiting_time += arrival_time - startTimeSlice;
+            //cout << "TIME " << startTimeSlice << ", " << process_id << " " << state << endl;
+            prevState = state;
+            while(state == "STARTED"){
+
             }
-        
         }
-        
         if(state == "PAUSED"){
-            
-            if(prevState!=state){
-                endTimeSlice =(clk->getTime()*100);
-                deltaTimeSlice = endTimeSlice - startTimeSlice;
-                burst_time -= deltaTimeSlice;
-                
-                if(burst_time <= 0)
-                    state = "TERMINATED";
-                else{
-                    cout<<"Time "<<startTimeSlice<<", "<<process_id << " " << prevState << ", Granted " << deltaTimeSlice << endl;
-                    cout<<"Time "<<endTimeSlice<<", "<<process_id << " " << state << endl;
-                    prevState = state;
-                }
-                
+            endTimeSlice = clk->getTime();
+            deltaTimeSlice = endTimeSlice - startTimeSlice;
+            burst_time -= deltaTimeSlice;
+            if(burst_time <= 0){
+                state = "TERMINATED";
             }
-        }
-        
-        if(state == "RESUMED"){
-            
-            if(prevState!=state){
-                startTimeSlice = (clk->getTime()*100);
-                ++cpu_iteration;
-                waiting_time += startTimeSlice - endTimeSlice;
+            else{
+                //cout << "TIME " << startTimeSlice << ", " << process_id << " " << prevState << ", GRANTED " << deltaTimeSlice << endl;
+                cout << "TIME " << startTimeSlice << ", " << process_id << " " << prevState << ", GRANTED " << deltaTimeSlice << endl;
+                cout << "TIME " << endTimeSlice << ", " << process_id << " " << state << endl;
                 prevState = state;
             }
-        
+            while(state == "PAUSED"){
+
+            }
+        }
+        if(state == "RESUMED"){
+            startTimeSlice = clk->getTime();
+            waiting_time += startTimeSlice - endTimeSlice;
+            //cout << "TIME " << startTimeSlice << ", " << process_id << " " << state << endl;
+            prevState = state;
+            while(state == "RESUMED"){
+
+            }
         }
         
         if(state == "TERMINATED"){
-            cout << "TIME " << startTimeSlice << ", " << process_id << " " << prevState << ", GRANTED " << deltaTimeSlice << endl;
+            //cout << "TIME " << startTimeSlice << ", " << process_id << " " << prevState << ", GRANTED " << deltaTimeSlice << endl;
             cout << "TIME " << endTimeSlice << ", " << process_id << " " << state << endl;
             break;
         }
-            
     }
-        
-
-    
-    
 }
 

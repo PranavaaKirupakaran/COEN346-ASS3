@@ -10,13 +10,15 @@
 
 #include <stdio.h>
 #include <string>
-#include "Clock.hpp"
+#include "Clock.cpp"
+#include <mutex>
 
 
 class Process{
     private:
         std::string process_id, state;
         int arrival_time, burst_time, priority, waiting_time, cpu_iteration;
+        std::mutex m;
         Clock* clk;
 
     public:

@@ -5,13 +5,14 @@
 //  Created by Rohit Vaidya on 2022-03-13.
 //
 
-#ifndef Scheduler_hpp
-#define Scheduler_hpp
+#ifndef Scheduler_h
+#define Scheduler_h
 
 #include <stdio.h>
 #include <string>
-#include "Clock.hpp"
-#include "ProcessQueue.hpp"
+#include "Clock.cpp"
+#include "ProcessQueue.cpp"
+#include <thread>
 
 class Scheduler{
     

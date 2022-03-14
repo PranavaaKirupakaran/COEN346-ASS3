@@ -15,7 +15,7 @@ class Clock{
     private:
         int time;
         bool startFlag;
-    std::mutex m;
+    //std::mutex m;
 
     public:
         Clock();

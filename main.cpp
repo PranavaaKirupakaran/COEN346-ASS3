@@ -7,7 +7,7 @@
 
 #include <unistd.h>
 //#include "Process.cpp"
-#include "ProcessQueue.hpp"
+#include "ProcessQueue.cpp"
 //#include "Clock.hpp"
 #include <iostream>
 #include <stdio.h>
@@ -20,6 +20,7 @@ using namespace std;
 
 void startUp();
 void updateClock();
+void sleepScheduler(int timeSlice);
 
 int clck;
 int process_count;
@@ -32,17 +33,18 @@ Clock* timer = new Clock();
 int main(){
 
     startUp();
+    int startclk, endclk = 0;
     
     processList.front()->setClock(timer);
     thread th2(&Clock::startClock, timer);
-    this_thread::sleep_for(chrono::milliseconds(1000));
+    sleepScheduler(100);
     processList.front()->setState("STARTED");
     thread th(&Process::execute,processList.front());
-    this_thread::sleep_for(chrono::milliseconds(1000));
+    sleepScheduler(100);
     processList.front()->setState("PAUSED");
-    this_thread::sleep_for(chrono::milliseconds(1000));
+    sleepScheduler(100);
     processList.front()->setState("RESUMED");
-    this_thread::sleep_for(chrono::milliseconds(1500));
+    sleepScheduler(150);
     processList.front()->setState("PAUSED");
     timer->setStartFlag(false);
 
@@ -50,6 +52,14 @@ int main(){
     th2.join();
     
 
+}
+
+void sleepScheduler(int timeSlice){
+    int startclk = timer->getTime();
+    while((startclk + timeSlice) != timer->getTime()){
+
+    }
+    //cout << timer->getTime() << endl;
 }
 
 void startUp()
