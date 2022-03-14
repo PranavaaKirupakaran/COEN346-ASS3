@@ -28,7 +28,7 @@ int Scheduler::calculateTimeSlice(Process* p){
 int Scheduler::calculatePriority(Process* p){
     if(p->getCpuIteration()%2 == 0){
         int bonus = floor((p->getWaitingTime()*10)/(clk->getTime() - p->getArrivalTime()));
-        int newPriority = max(100,min((p->getPriority() - bonus), 139));
+        int newPriority = max(100,min((p->getPriority() - bonus + 5), 139));
         return newPriority;
     }
     else
@@ -69,12 +69,15 @@ ProcessQueue* Scheduler::getExpiredQueue(){
 }
 
 void Scheduler::schedule(){
-    ProcessQueue* active;
-    ProcessQueue* expired;
+    ProcessQueue* active = getActiveQueue();
+    ProcessQueue* expired = getExpiredQueue();
     Process* tempProcess;
     while(!q1.checkEmpty() || !q2.checkEmpty()){
-        active = getActiveQueue();
-        expired = getExpiredQueue();
+        if(q1.checkEmpty() || q2.checkEmpty()){
+            swapFlag;
+            active = getActiveQueue();
+            expired = getExpiredQueue();
+        }
         tempProcess = active->removeProcess();
         timeSlice = calculateTimeSlice(tempProcess);
         if(tempProcess->getCpuIteration() == 0){
