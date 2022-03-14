@@ -154,3 +154,10 @@ void Process::execute(){
     }
 }
 
+string Process::getID() {
+    return threadID;
+}
+
+void Process::setID(string s)   {
+    threadID = s;
+}
