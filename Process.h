@@ -10,7 +10,7 @@
 
 #include <stdio.h>
 #include <string>
-#include "Clock.cpp"
+#include "Clock.hpp"
 
 
 class Process{
@@ -20,7 +20,7 @@ class Process{
         Clock* clk;
 
     public:
-        Process(); 
+        Process();
         Process(std::string id, int arrivalTime, int burstTime, int p);
         ~Process();
         void setProcessID(std::string processID);
