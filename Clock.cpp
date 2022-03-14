@@ -24,15 +24,11 @@ Clock::~Clock(){
 }
 
 void Clock::setTime(int value){
-    //m.lock();
     time = value;
-    //m.unlock();
 }
 
 int Clock::getTime(){
-    //m.lock();
     int temp = time;
-    //m.unlock();
     return temp;
 }
 
@@ -48,10 +44,7 @@ void Clock::startClock(){
     std::cout << "Start Clock" << std::endl;
     while(startFlag){
         std::this_thread::sleep_for(std::chrono::milliseconds(10));
-        //m.lock();
         time += 1;
-        //std::cout << time << std::endl;
-        //m.unlock();
     }
     std::cout << "Stop Clock" << std::endl;
 }

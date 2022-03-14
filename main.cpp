@@ -33,18 +33,17 @@ Clock* timer = new Clock();
 int main(){
 
     startUp();
-    int startclk, endclk = 0;
-    
+        
     processList.front()->setClock(timer);
     thread th2(&Clock::startClock, timer);
-    sleepScheduler(100);
+    sleepScheduler(1000);
     processList.front()->setState("STARTED");
     thread th(&Process::execute,processList.front());
-    sleepScheduler(100);
+    sleepScheduler(1000);
     processList.front()->setState("PAUSED");
-    sleepScheduler(100);
+    sleepScheduler(1000);
     processList.front()->setState("RESUMED");
-    sleepScheduler(150);
+    sleepScheduler(1500);
     processList.front()->setState("PAUSED");
     timer->setStartFlag(false);
 
@@ -59,7 +58,6 @@ void sleepScheduler(int timeSlice){
     while((startclk + timeSlice) != timer->getTime()){
 
     }
-    //cout << timer->getTime() << endl;
 }
 
 void startUp()
