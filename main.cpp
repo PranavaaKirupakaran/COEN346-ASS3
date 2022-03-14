@@ -4,10 +4,11 @@
 //
 //  Created by Rohit Vaidya on 2022-03-09.
 //
+
 #include <unistd.h>
 //#include "Process.cpp"
-#include "ProcessQueue.cpp"
-//#include "Clock.cpp"
+#include "ProcessQueue.hpp"
+//#include "Clock.hpp"
 #include <iostream>
 #include <stdio.h>
 #include <fstream>
@@ -26,21 +27,22 @@ ProcessQueue q1(true);
 ProcessQueue q2(false);
 queue<Process*> processList;
 vector<thread> threadList;
+Clock* timer = new Clock();
 
 int main(){
 
     startUp();
-    Clock* timer = new Clock();
+    
     processList.front()->setClock(timer);
     thread th2(&Clock::startClock, timer);
-    this_thread::sleep_for(chrono::milliseconds(1100));
+    this_thread::sleep_for(chrono::milliseconds(1000));
     processList.front()->setState("STARTED");
     thread th(&Process::execute,processList.front());
-    this_thread::sleep_for(chrono::milliseconds(1100));
+    this_thread::sleep_for(chrono::milliseconds(1000));
     processList.front()->setState("PAUSED");
-    this_thread::sleep_for(chrono::milliseconds(1100));
+    this_thread::sleep_for(chrono::milliseconds(1000));
     processList.front()->setState("RESUMED");
-    this_thread::sleep_for(chrono::milliseconds(1600));
+    this_thread::sleep_for(chrono::milliseconds(1500));
     processList.front()->setState("PAUSED");
     timer->setStartFlag(false);
 
@@ -79,7 +81,7 @@ void startUp()
                         //cout<< arrival<<" "<<burst<<" "<<priority<<endl;
                         Process* tempProcess = new Process(p_id,arrival,burst,priority);
                         processList.push(tempProcess);
-                        q2.addProcess(*tempProcess);
+                        q2.addProcess(tempProcess);
                         line = "";
                     }
                 }
@@ -97,4 +99,3 @@ void updateClock()  {
         cout << clck << endl;
     }
 }
-
