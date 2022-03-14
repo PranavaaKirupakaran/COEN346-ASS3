@@ -33,6 +33,7 @@ public:
     void setClock(Clock* c);
     ProcessQueue* getActiveQueue();
     ProcessQueue* getExpiredQueue();
+    void sleepScheduler();
     
 };
 #endif /* Scheduler_hpp */
