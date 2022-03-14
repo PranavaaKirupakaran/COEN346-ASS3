@@ -86,10 +86,17 @@ void Scheduler::schedule(){
         else {
             tempProcess->setState("RESUMED");
         }
-        this_thread::sleep_for(chrono::milliseconds(timeSlice));
+        sleepScheduler();
         tempProcess->setState("PAUSED");
         tempProcess->setPriority(calculatePriority(tempProcess));
         
         
+    }
+}
+
+void Scheduler::sleepScheduler(){
+    int startClk = clk->getTime();
+    while(timeSlice + startClk != clk->getTime()){
+
     }
 }
