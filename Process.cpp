@@ -89,7 +89,11 @@ void Process::setState(string status){
 }
 
 string Process::getState(){
-    return state;
+    m.lock()
+    string temp = state;
+    m.unlock();
+    return temp;
+    
 }
 
 void Process::setClock(Clock* timer){
@@ -122,6 +126,7 @@ void Process::execute(){
             }
         }
         if(state == "PAUSED"){
+            m.lock();
             endTimeSlice = clk->getTime();
             deltaTimeSlice = endTimeSlice - startTimeSlice;
             burst_time -= deltaTimeSlice;
@@ -133,6 +138,7 @@ void Process::execute(){
                 cout << "TIME " << endTimeSlice << ", " << process_id << " " << state << endl;
                 prevState = state;
             }
+            m.unlock();
             while(state == "PAUSED"){
 
             }
@@ -148,16 +154,8 @@ void Process::execute(){
         
         if(state == "TERMINATED"){
             cout << "TIME " << startTimeSlice << ", " << process_id << " " << prevState << ", GRANTED " << deltaTimeSlice << endl;
-            cout << "TIME " << endTimeSlice << ", " << process_id << " " << state << endl;
+            cout << "TIME " << endTimeSlice + burst_time << ", " << process_id << " " << state << endl;
             break;
         }
     }
-}
-
-string Process::getID() {
-    return threadID;
-}
-
-void Process::setID(string s)   {
-    threadID = s;
 }

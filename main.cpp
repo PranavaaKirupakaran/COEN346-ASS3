@@ -36,14 +36,14 @@ int main(){
         
     processList.front()->setClock(timer);
     thread th2(&Clock::startClock, timer);
-    sleepScheduler(1000);
+    sleepScheduler(100);
     processList.front()->setState("STARTED");
     thread th(&Process::execute,processList.front());
-    sleepScheduler(1000);
+    sleepScheduler(100);
     processList.front()->setState("PAUSED");
-    sleepScheduler(1000);
+    sleepScheduler(100);
     processList.front()->setState("RESUMED");
-    sleepScheduler(1500);
+    sleepScheduler(150);
     processList.front()->setState("PAUSED");
     timer->setStartFlag(false);
 
