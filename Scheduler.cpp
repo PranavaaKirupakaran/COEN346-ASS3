@@ -72,7 +72,7 @@ void Scheduler::schedule(){
     ProcessQueue* active = getActiveQueue();
     ProcessQueue* expired = getExpiredQueue();
     Process* tempProcess;
-    while(!q1.checkEmpty() || !q2.checkEmpty()){
+    while(true){
         if(q1.checkEmpty() || q2.checkEmpty()){
             swapFlag;
             active = getActiveQueue();
@@ -92,6 +92,9 @@ void Scheduler::schedule(){
         sleepScheduler();
         tempProcess->setState("PAUSED");
         tempProcess->setPriority(calculatePriority(tempProcess));
+        if(tempProcess->getState() != "TERMINATED"){
+            expired->addProcess(tempProcess);
+        }
         
         
     }

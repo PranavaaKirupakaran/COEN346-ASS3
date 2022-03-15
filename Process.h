@@ -19,6 +19,8 @@ class Process{
         std::string process_id, state;
         int arrival_time, burst_time, priority, waiting_time, cpu_iteration;
         Clock* clk;
+        std::string threadID;
+        std::mutex m;
 
     public:
         Process();
