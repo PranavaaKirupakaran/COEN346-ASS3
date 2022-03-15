@@ -10,7 +10,7 @@
 
 #include <stdio.h>
 #include <string>
-#include "Clock.cpp"
+//#include "Clock.cpp"
 #include "ProcessQueue.cpp"
 #include <thread>
 
@@ -22,6 +22,7 @@ private:
     ProcessQueue q2;
     int timeSlice;
     vector<thread> threadVector;
+    bool terminated;
     
 public:
     Scheduler();
@@ -34,6 +35,8 @@ public:
     ProcessQueue* getActiveQueue();
     ProcessQueue* getExpiredQueue();
     void sleepScheduler();
+    void setTerminated(bool flag);
+    bool getTerminated();
     
 };
 #endif /* Scheduler_hpp */

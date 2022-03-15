@@ -7,8 +7,9 @@
 
 #include <unistd.h>
 //#include "Process.cpp"
-#include "ProcessQueue.cpp"
+//#include "ProcessQueue.cpp"
 //#include "Clock.hpp"
+#include "Scheduler.cpp"
 #include <iostream>
 #include <stdio.h>
 #include <fstream>
@@ -29,11 +30,23 @@ ProcessQueue q2(false);
 queue<Process*> processList;
 vector<thread> threadList;
 Clock* timer = new Clock();
+Scheduler sched;
 
 int main(){
 
     startUp();
-        
+    timer->startClock();
+    thread th(&Scheduler::schedule, sched);
+    while(processList.size() != 0){
+        if(processList.front()->getArrivalTime() == timer->getTime()){
+            processList.front()->setClock(timer);
+            sched.addProcess(processList.front());
+        }
+    }
+
+    sched.setTerminated(true);
+    
+    /*
     processList.front()->setClock(timer);
     thread th2(&Clock::startClock, timer);
     sleepScheduler(100);
@@ -49,6 +62,9 @@ int main(){
 
     th.join();
     th2.join();
+    */
+
+
     
 
 }

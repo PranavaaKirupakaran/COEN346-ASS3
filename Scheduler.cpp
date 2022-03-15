@@ -15,6 +15,7 @@ using namespace std;
 Scheduler::Scheduler(){
     q2.updateFlag();
     timeSlice = 0;
+    terminated = false;
 }
 
 int Scheduler::calculateTimeSlice(Process* p){
@@ -73,8 +74,11 @@ void Scheduler::schedule(){
     ProcessQueue* expired = getExpiredQueue();
     Process* tempProcess;
     while(true){
-        if(q1.checkEmpty() || q2.checkEmpty()){
-            swapFlag;
+        while(q1.checkEmpty() || q2.checkEmpty()){
+            if(terminated){
+                break;
+            }
+            swapFlag();
             active = getActiveQueue();
             expired = getExpiredQueue();
         }
@@ -97,9 +101,6 @@ void Scheduler::schedule(){
             expired->addProcess(tempProcess);
         }
         
-        
-        
-        
     }
 }
 
@@ -108,4 +109,12 @@ void Scheduler::sleepScheduler(){
     while(timeSlice + startClk != clk->getTime()){
 
     }
+}
+
+void Scheduler::setTerminated(bool flag){
+    terminated = flag;
+}
+
+bool Scheduler::getTerminated(){
+    return terminated;
 }
