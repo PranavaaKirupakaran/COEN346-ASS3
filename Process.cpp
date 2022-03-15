@@ -89,7 +89,7 @@ void Process::setState(string status){
 }
 
 string Process::getState(){
-    m.lock()
+    m.lock();
     string temp = state;
     m.unlock();
     return temp;
