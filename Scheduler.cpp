@@ -78,6 +78,7 @@ void Scheduler::schedule(){
             active = getActiveQueue();
             expired = getExpiredQueue();
         }
+
         tempProcess = active->removeProcess();
         timeSlice = calculateTimeSlice(tempProcess);
         if(tempProcess->getCpuIteration() == 0){
@@ -95,6 +96,8 @@ void Scheduler::schedule(){
         if(tempProcess->getState() != "TERMINATED"){
             expired->addProcess(tempProcess);
         }
+        
+        
         
         
     }
