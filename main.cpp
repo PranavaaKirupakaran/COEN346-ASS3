@@ -13,7 +13,7 @@
 #include <iostream>
 #include <stdio.h>
 #include <fstream>
-#include <queue>
+//#include <queue>
 #include <thread>
 #include <vector>
 
@@ -30,7 +30,7 @@ ProcessQueue q2(false);
 queue<Process*> processList;
 vector<thread> threadList;
 Clock* timer = new Clock();
-Scheduler sched;
+Scheduler* sched = new Scheduler();
 
 int main(){
 
@@ -40,11 +40,11 @@ int main(){
     while(processList.size() != 0){
         if(processList.front()->getArrivalTime() == timer->getTime()){
             processList.front()->setClock(timer);
-            sched.addProcess(processList.front());
+            sched->addProcess(processList.front());
         }
     }
 
-    sched.setTerminated(true);
+    sched->setTerminated(true);
     
     /*
     processList.front()->setClock(timer);
