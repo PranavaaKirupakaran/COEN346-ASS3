@@ -38,6 +38,7 @@ public:
     void sleepScheduler();
     void setTerminated(bool flag);
     bool getTerminated();
+    void joinThreadVector();
 
 };
 #endif /* Scheduler_hpp */

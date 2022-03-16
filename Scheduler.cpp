@@ -88,6 +88,7 @@ void Scheduler::schedule() {
     out.open("output.txt", std::ios_base::app);
     while (true) {
         if (terminated && q1.checkEmpty() && q2.checkEmpty()) {
+            joinThreadVector();
             clk->setStartFlag(false);
             break;
         }
@@ -137,4 +138,12 @@ void Scheduler::setTerminated(bool flag) {
 
 bool Scheduler::getTerminated() {
     return terminated;
+}
+
+void Scheduler::joinThreadVector() {
+    for (int i = 0; i < threadVector.size(); i++) {
+        if (threadVector.at(i).joinable()) {
+            threadVector.at(i).join();
+        }
+    }
 }
