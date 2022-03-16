@@ -5,7 +5,7 @@
 //  Created by Rohit Vaidya on 2022-03-13.
 //
 
-#include "Scheduler.h"
+#include "Scheduler.hpp"
 #include <cmath>
 #include <thread>
 #include <vector>
@@ -85,6 +85,7 @@ void Scheduler::schedule() {
     ProcessQueue* expired = getExpiredQueue();
     Process* tempProcess;
     fstream out;
+
     out.open("output.txt", std::ios_base::app);
     while (true) {
         if (terminated && q1.checkEmpty() && q2.checkEmpty()) {
@@ -111,15 +112,21 @@ void Scheduler::schedule() {
             threadVector.push_back(move(th));
         }
         else {
+
             tempProcess->setState("RESUMED");
             out << "TIME " << clk->getTime() << ", " << tempProcess->getProcessID() << " RESUMED, GRANTED " << timeSlice << endl;
+
         }
         sleepScheduler();
+
         tempProcess->setState("PAUSED");
         tempProcess->setPriority(calculatePriority(tempProcess));
+
         if (tempProcess->getState() != "TERMINATED") {
+  
             out << "TIME " << clk->getTime() << ", " << tempProcess->getProcessID() << " PAUSED" << endl;
             addProcess(tempProcess);
+            
         }
 
     }
