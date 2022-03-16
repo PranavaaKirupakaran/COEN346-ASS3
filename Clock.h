@@ -1,4 +1,5 @@
 #pragma once
+
 //
 //  Clock.hpp
 //  COEN346Scheduler
@@ -32,5 +33,3 @@ public:
 };
 
 #endif
-
-
