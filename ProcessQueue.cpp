@@ -4,7 +4,7 @@
 //
 //  Created by Rohit Vaidya on 2022-03-12.
 //
-#include "ProcessQueue.h"
+#include "ProcessQueue.hpp"
 
 using namespace std;
 
@@ -103,4 +103,3 @@ void ProcessQueue::printQueue() {
 bool ProcessQueue::checkEmpty() {
     return plist.empty();
 }
-
