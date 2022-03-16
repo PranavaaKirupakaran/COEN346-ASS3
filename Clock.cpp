@@ -48,4 +48,3 @@ void Clock::startClock() {
     }
     std::cout << "Stop Clock" << std::endl;
 }
-
