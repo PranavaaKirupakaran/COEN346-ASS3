@@ -12,72 +12,81 @@
 
 using namespace std;
 
-Scheduler::Scheduler(){
+Scheduler::Scheduler() {
     q2.updateFlag();
     timeSlice = 0;
     terminated = false;
 }
 
-int Scheduler::calculateTimeSlice(Process* p){
-    if(p->getPriority() < 100)
-        timeSlice =  (140-p->getPriority())*20;
-    else if(p->getPriority() >= 100)
-        timeSlice =  (140-p->getPriority())*5;
+int Scheduler::calculateTimeSlice(Process* p) {
+    if (p->getPriority() < 100)
+        timeSlice = (140 - p->getPriority()) * 20;
+    else if (p->getPriority() >= 100)
+        timeSlice = (140 - p->getPriority()) * 5;
     return timeSlice;
 }
 
-int Scheduler::calculatePriority(Process* p){
-    if(p->getCpuIteration()%2 == 0){
-        int bonus = floor((p->getWaitingTime()*10)/(clk->getTime() - p->getArrivalTime()));
-        int newPriority = max(100,min((p->getPriority() - bonus + 5), 139));
+int Scheduler::calculatePriority(Process* p) {
+    if (p->getCpuIteration() % 2 == 0) {
+        int bonus = floor((p->getWaitingTime() * 10) / (clk->getTime() - p->getArrivalTime()));
+        int newPriority = max(100, min((p->getPriority() - bonus + 5), 139));
+        cout << "TIME " << clk->getTime() << ", " << p->getProcessID() << ", priority updated to " << newPriority << endl;
         return newPriority;
     }
     else
         return p->getPriority();
-    
+
 }
 
-void Scheduler::swapFlag(){
+void Scheduler::swapFlag() {
     q2.updateFlag();
     q1.updateFlag();
     q2.sort();
     q1.sort();
 }
 
-void Scheduler::addProcess(Process* p){
-    if(q1.getFlag() == false)
+void Scheduler::addProcess(Process* p) {
+    if (q1.getFlag() == false) {
         q1.addProcess(p);
-    else if(!q2.getFlag())
+    }
+    else if (!q2.getFlag()) {
         q2.addProcess(p);
+    }
 }
 
-void Scheduler::setClock(Clock *c){
+void Scheduler::setClock(Clock* c) {
     clk = c;
 }
 
-ProcessQueue* Scheduler::getActiveQueue(){
-    if(q1.getFlag())
+ProcessQueue* Scheduler::getActiveQueue() {
+    if (q1.getFlag())
         return &q1;
     else
         return &q2;
 }
 
-ProcessQueue* Scheduler::getExpiredQueue(){
-    if(!q1.getFlag())
+ProcessQueue* Scheduler::getExpiredQueue() {
+    if (!q1.getFlag())
         return &q1;
     else
         return &q2;
 }
 
-void Scheduler::schedule(){
+void Scheduler::schedule() {
     ProcessQueue* active = getActiveQueue();
     ProcessQueue* expired = getExpiredQueue();
     Process* tempProcess;
-    while(true){
-        while(q1.checkEmpty() || q2.checkEmpty()){
-            if(terminated){
-                break;
-            }
+    while (true) {
+        if (terminated && q1.checkEmpty() && q2.checkEmpty()) {
+            cout << "Scheduler done schedulling" << endl;
+            clk->setStartFlag(false);
+            break;
+        }
+        while (q1.checkEmpty() && q2.checkEmpty()) {
+
+        }
+
+        if (active->checkEmpty()) {
             swapFlag();
             active = getActiveQueue();
             expired = getExpiredQueue();
@@ -85,10 +94,10 @@ void Scheduler::schedule(){
 
         tempProcess = active->removeProcess();
         timeSlice = calculateTimeSlice(tempProcess);
-        if(tempProcess->getCpuIteration() == 0){
+        if (tempProcess->getCpuIteration() == 0) {
             tempProcess->setState("STARTED");
-            thread th(&Process::execute,tempProcess);
-            
+            thread th(&Process::execute, tempProcess);
+
             threadVector.push_back(move(th));
         }
         else {
@@ -97,24 +106,24 @@ void Scheduler::schedule(){
         sleepScheduler();
         tempProcess->setState("PAUSED");
         tempProcess->setPriority(calculatePriority(tempProcess));
-        if(tempProcess->getState() != "TERMINATED"){
-            expired->addProcess(tempProcess);
+        if (tempProcess->getState() != "TERMINATED") {
+            addProcess(tempProcess);
         }
-        
+
     }
 }
 
-void Scheduler::sleepScheduler(){
+void Scheduler::sleepScheduler() {
     int startClk = clk->getTime();
-    while(timeSlice + startClk != clk->getTime()){
+    while (timeSlice + startClk != clk->getTime()) {
 
     }
 }
 
-void Scheduler::setTerminated(bool flag){
+void Scheduler::setTerminated(bool flag) {
     terminated = flag;
 }
 
-bool Scheduler::getTerminated(){
+bool Scheduler::getTerminated() {
     return terminated;
 }

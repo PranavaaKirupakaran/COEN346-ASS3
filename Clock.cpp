@@ -9,42 +9,42 @@
 #include <thread>
 #include <chrono>
 
-Clock::Clock(){
+Clock::Clock() {
     time = 0;
     startFlag = true;
 }
 
-Clock::Clock(int startValue, bool flag){
+Clock::Clock(int startValue, bool flag) {
     time = startValue;
     startFlag = flag;
 }
 
-Clock::~Clock(){
+Clock::~Clock() {
 
 }
 
-void Clock::setTime(int value){
+void Clock::setTime(int value) {
     time = value;
 }
 
-int Clock::getTime(){
-    int temp = time;
-    return temp;
+int Clock::getTime() {
+    return time;
 }
 
-void Clock::setStartFlag(bool flag){
+void Clock::setStartFlag(bool flag) {
     startFlag = flag;
 }
 
-bool Clock::getStartFlag(){
+bool Clock::getStartFlag() {
     return startFlag;
 }
 
-void Clock::startClock(){
+void Clock::startClock() {
     std::cout << "Start Clock" << std::endl;
-    while(startFlag){
+    while (startFlag) {
         std::this_thread::sleep_for(std::chrono::milliseconds(10));
         time += 1;
+        //std::cout << time << std::endl;
     }
     std::cout << "Stop Clock" << std::endl;
 }

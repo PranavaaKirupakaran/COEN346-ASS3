@@ -1,3 +1,4 @@
+#pragma once
 //
 //  Scheduler.hpp
 //  COEN346Scheduler
@@ -14,8 +15,8 @@
 #include "ProcessQueue.cpp"
 #include <thread>
 
-class Scheduler{
-    
+class Scheduler {
+
 private:
     Clock* clk;
     ProcessQueue q1;
@@ -23,7 +24,7 @@ private:
     int timeSlice;
     vector<thread> threadVector;
     bool terminated;
-    
+
 public:
     Scheduler();
     int calculateTimeSlice(Process* p);
@@ -37,6 +38,8 @@ public:
     void sleepScheduler();
     void setTerminated(bool flag);
     bool getTerminated();
-    
+
 };
 #endif /* Scheduler_hpp */
+
+

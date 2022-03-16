@@ -1,3 +1,4 @@
+#pragma once
 //
 //  Clock.hpp
 //  COEN346Scheduler
@@ -11,23 +12,25 @@
 #include <iostream>
 #include <mutex>
 
-class Clock{
-    private:
-        int time;
-        bool startFlag;
+class Clock {
+private:
+    int time;
+    bool startFlag;
     //std::mutex m;
 
-    public:
-        Clock();
-        Clock(int startValue, bool flag);
-        ~Clock();
-        void setTime(int value);
-        int getTime();
-        void setStartFlag(bool flag);
-        bool getStartFlag();
-        void startClock();
+public:
+    Clock();
+    Clock(int startValue, bool flag);
+    ~Clock();
+    void setTime(int value);
+    int getTime();
+    void setStartFlag(bool flag);
+    bool getStartFlag();
+    void startClock();
 
 
 };
 
 #endif
+
+
