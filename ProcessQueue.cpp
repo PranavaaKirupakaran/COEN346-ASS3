@@ -8,31 +8,31 @@
 
 using namespace std;
 
-ProcessQueue::ProcessQueue(){
+ProcessQueue::ProcessQueue() {
     flag = true;
 }
 
-ProcessQueue::ProcessQueue(bool active){
+ProcessQueue::ProcessQueue(bool active) {
     flag = active;
 }
 
-ProcessQueue::~ProcessQueue(){
-    
+ProcessQueue::~ProcessQueue() {
+
 }
 
-void ProcessQueue::addProcess(Process* p){
+void ProcessQueue::addProcess(Process* p) {
     plist.push(p);
 }
 
-void ProcessQueue::updateFlag(){
+void ProcessQueue::updateFlag() {
     flag = !flag;
 }
 
-bool ProcessQueue::getFlag(){
+bool ProcessQueue::getFlag() {
     return flag;
 }
 
-Process* ProcessQueue::removeProcess(){
+Process* ProcessQueue::removeProcess() {
     Process* temp = plist.front();
     plist.pop();
     return temp;
@@ -43,11 +43,11 @@ int ProcessQueue::minIndex(int sortedIndex)
     int min_index = -1;
     int min_val = 140;
     int n = plist.size();
-    for (int i=0; i<n; i++)
+    for (int i = 0; i < n; i++)
     {
         Process* curr = plist.front();
         plist.pop();  // This is dequeue() in C++ STL
- 
+
         // we add the condition i <= sortedIndex
         // because we don't want to traverse
         // on the sorted part of the queue,
@@ -62,7 +62,7 @@ int ProcessQueue::minIndex(int sortedIndex)
     }
     return min_index;
 }
- 
+
 // Moves given minimum element to rear of
 // queue
 void ProcessQueue::insertMinToRear(int min_index)
@@ -80,7 +80,7 @@ void ProcessQueue::insertMinToRear(int min_index)
     }
     plist.push(min_val);
 }
- 
+
 void ProcessQueue::sort()
 {
     for (int i = 1; i <= plist.size(); i++)
@@ -90,16 +90,17 @@ void ProcessQueue::sort()
     }
 }
 
-void ProcessQueue::printQueue(){
+void ProcessQueue::printQueue() {
     Process* temp;
     queue<Process*> tempList = plist;
-    while(!tempList.empty()){
+    while (!tempList.empty()) {
         temp = tempList.front();
         tempList.pop();
-        cout << "PID: " << temp->getProcessID() <<" Priority: " << temp->getPriority() << endl;
+        cout << "PID: " << temp->getProcessID() << " Priority: " << temp->getPriority() << endl;
     }
 }
 
-bool ProcessQueue::checkEmpty(){
+bool ProcessQueue::checkEmpty() {
     return plist.empty();
 }
+

@@ -1,3 +1,4 @@
+#pragma once
 //
 //  ProcessQueue.hpp
 //  COEN346Scheduler
@@ -15,28 +16,29 @@
 
 using namespace std;
 
-class ProcessQueue{
+class ProcessQueue {
 
-    private:
-        queue<Process*> plist;
-        bool flag;
+private:
+    queue<Process*> plist;
+    bool flag;
 
-    public:
-        ProcessQueue();
-        ProcessQueue(bool active);
-        ~ProcessQueue();
-        void addProcess(Process* p);
-        Process* removeProcess();
-        void updateFlag();
-        bool getFlag();
-        int minIndex(int sortedIndex);
-        void insertMinToRear(int min_index);
-        void sort();
-        void printQueue();
-        bool checkEmpty();
-        
-        
+public:
+    ProcessQueue();
+    ProcessQueue(bool active);
+    ~ProcessQueue();
+    void addProcess(Process* p);
+    Process* removeProcess();
+    void updateFlag();
+    bool getFlag();
+    int minIndex(int sortedIndex);
+    void insertMinToRear(int min_index);
+    void sort();
+    void printQueue();
+    bool checkEmpty();
+
+
 
 };
 
 #endif
+
