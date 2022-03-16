@@ -9,6 +9,7 @@
 #include <cmath>
 #include <thread>
 #include <vector>
+#include <fstream>
 
 using namespace std;
 
@@ -27,10 +28,12 @@ int Scheduler::calculateTimeSlice(Process* p) {
 }
 
 int Scheduler::calculatePriority(Process* p) {
+    fstream out;
     if (p->getCpuIteration() % 2 == 0) {
         int bonus = floor((p->getWaitingTime() * 10) / (clk->getTime() - p->getArrivalTime()));
         int newPriority = max(100, min((p->getPriority() - bonus + 5), 139));
-        cout << "TIME " << clk->getTime() << ", " << p->getProcessID() << ", priority updated to " << newPriority << endl;
+        out.open("output.txt", std::ios_base::app);
+        out << "TIME " << clk->getTime() << ", " << p->getProcessID() << ", priority updated to " << newPriority << endl;
         return newPriority;
     }
     else
@@ -47,7 +50,9 @@ void Scheduler::swapFlag() {
 
 void Scheduler::addProcess(Process* p) {
     if (p->getCpuIteration() == 0) {
-        cout << "TIME " << clk->getTime() << ", " << p->getProcessID() << " ARRIVED" << endl;
+        fstream out;
+        out.open("output.txt", std::ios_base::app);
+        out << "TIME " << clk->getTime() << ", " << p->getProcessID() << " ARRIVED" << endl;
     }
     if (q1.getFlag() == false) {
         q1.addProcess(p);
@@ -79,9 +84,10 @@ void Scheduler::schedule() {
     ProcessQueue* active = getActiveQueue();
     ProcessQueue* expired = getExpiredQueue();
     Process* tempProcess;
+    fstream out;
+    out.open("output.txt", std::ios_base::app);
     while (true) {
         if (terminated && q1.checkEmpty() && q2.checkEmpty()) {
-            cout << "Scheduler done schedulling" << endl;
             clk->setStartFlag(false);
             break;
         }
@@ -100,18 +106,18 @@ void Scheduler::schedule() {
         if (tempProcess->getCpuIteration() == 0) {
             tempProcess->setState("STARTED");
             thread th(&Process::execute, tempProcess);
-            cout << "TIME " << clk->getTime() << ", " << tempProcess->getProcessID() << " STARTED, GRANTED " << timeSlice << endl;
+            out << "TIME " << clk->getTime() << ", " << tempProcess->getProcessID() << " STARTED, GRANTED " << timeSlice << endl;
             threadVector.push_back(move(th));
         }
         else {
             tempProcess->setState("RESUMED");
-            cout << "TIME " << clk->getTime() << ", " << tempProcess->getProcessID() << " RESUMED, GRANTED " << timeSlice << endl;
+            out << "TIME " << clk->getTime() << ", " << tempProcess->getProcessID() << " RESUMED, GRANTED " << timeSlice << endl;
         }
         sleepScheduler();
         tempProcess->setState("PAUSED");
         tempProcess->setPriority(calculatePriority(tempProcess));
         if (tempProcess->getState() != "TERMINATED") {
-            cout << "TIME " << clk->getTime() << ", " << tempProcess->getProcessID() << " PAUSED" << endl;
+            out << "TIME " << clk->getTime() << ", " << tempProcess->getProcessID() << " PAUSED" << endl;
             addProcess(tempProcess);
         }
 
