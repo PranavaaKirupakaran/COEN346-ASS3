@@ -8,7 +8,7 @@
 //#include "Process.cpp"
 //#include "ProcessQueue.cpp"
 //#include "Clock.hpp"
-#include "Scheduler.h"
+#include "Scheduler.hpp"
 #include <iostream>
 #include <stdio.h>
 #include <fstream>
@@ -67,7 +67,6 @@ int main() {
     sleepScheduler(150);
     processList.front()->setState("PAUSED");
     timer->setStartFlag(false);
-
     th.join();
     th2.join();
     */
@@ -121,4 +120,3 @@ void startUp()
         }
     }
 }
-
