@@ -10,6 +10,7 @@
 #include <iostream>
 #include <stdio.h>
 #include <string>
+#include <fstream>
 
 using namespace std;
 
@@ -111,12 +112,9 @@ void Process::execute() {
     while (true) {
         /*
         if (state == "ARRIVED") {
-
             cout << "TIME " << arrival_time << ", " << process_id << " " << state << endl;
             while (state == "ARRIVED") {
-
             }
-
         }
         */
         if (state == "STARTED") {
@@ -158,11 +156,10 @@ void Process::execute() {
 
         if (state == "TERMINATED") {
             //cout << "TIME " << startTimeSlice << ", " << process_id << " " << prevState << ", GRANTED " << deltaTimeSlice << endl;
-            cout << "TIME " << endTimeSlice + burst_time << ", " << process_id << " " << state << endl;
+            fstream out;
+            out.open("output.txt", std::ios_base::app);
+            out << "TIME " << endTimeSlice + burst_time << ", " << process_id << " " << state << endl;
             break;
         }
     }
 }
-
-
-
