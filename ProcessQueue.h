@@ -1,4 +1,4 @@
-#pragma once
+
 //
 //  ProcessQueue.hpp
 //  COEN346Scheduler
@@ -12,7 +12,7 @@
 #include <iostream>
 #include <stdio.h>
 #include <queue>
-#include "Process.h"
+#include "Process.hpp"
 
 using namespace std;
 
@@ -41,4 +41,3 @@ public:
 };
 
 #endif
-
