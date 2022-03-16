@@ -8,7 +8,7 @@
 //#include "Process.cpp"
 //#include "ProcessQueue.cpp"
 //#include "Clock.hpp"
-#include "Scheduler.h"
+#include "Scheduler.cpp"
 #include <iostream>
 #include <stdio.h>
 #include <fstream>

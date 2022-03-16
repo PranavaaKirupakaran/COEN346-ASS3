@@ -12,8 +12,9 @@
 #include <stdio.h>
 #include <string>
 //#include "Clock.cpp"
-#include "ProcessQueue.h"
+#include "ProcessQueue.cpp"
 #include <thread>
+#include <fstream>
 
 class Scheduler {
 
@@ -24,6 +25,9 @@ private:
     int timeSlice;
     vector<thread> threadVector;
     bool terminated;
+    std::mutex print;
+    std::fstream logFile;
+    std::string logStatement;
 
 public:
     Scheduler();
@@ -39,6 +43,7 @@ public:
     void setTerminated(bool flag);
     bool getTerminated();
     void joinThreadVector();
+    void printToLog(string statement);
 
 };
 #endif /* Scheduler_hpp */
