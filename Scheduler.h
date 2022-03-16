@@ -1,4 +1,3 @@
-#pragma once
 //
 //  Scheduler.hpp
 //  COEN346Scheduler
@@ -12,7 +11,7 @@
 #include <stdio.h>
 #include <string>
 //#include "Clock.cpp"
-#include "ProcessQueue.h"
+#include "ProcessQueue.hpp"
 #include <thread>
 
 class Scheduler {
@@ -42,5 +41,4 @@ public:
 
 };
 #endif /* Scheduler_hpp */
-
 
