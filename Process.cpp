@@ -107,15 +107,19 @@ Clock* Process::getClock() {
 }
 
 void Process::execute() {
-    int startTimeSlice = 0, endTimeSlice = 0, deltaTimeSlice = 0;
+    int startTimeSlice = 0, endTimeSlice = 0;
     string prevState = "";
     while (true) {
+        //Check the current state of the process
         if (state == "STARTED") {
             startTimeSlice = clk->getTime();
+            //Update cpu_iteration to show process is not new and has begun execution
             cpu_iteration += 1;
             waiting_time += arrival_time - startTimeSlice;
+            
             int timeNow = clk->getTime();
             while (state == "STARTED") {
+                //Decrement process burst time if simulated clock time has incremented by 1
                 if (clk->getTime() == timeNow + 1) {
                     burst_time--;
                     timeNow = clk->getTime();
@@ -126,18 +130,23 @@ void Process::execute() {
                 }
             }
         }
+        
         if (state == "PAUSED") {
             endTimeSlice = clk->getTime();
+            //Stay in Paused state till state changed by scheduler
             while (state == "PAUSED") {
 
             }
         }
+        
         if (state == "RESUMED") {
             startTimeSlice = clk->getTime();
-            int timeNow = clk->getTime();
             waiting_time += startTimeSlice - endTimeSlice;
             cpu_iteration++;
+            
+            int timeNow = clk->getTime();
             while (state == "RESUMED") {
+                //Decrement process burst time if 1s has passed in simulated time
                 if (clk->getTime() == timeNow + 1) {
                     burst_time--;
                     timeNow = clk->getTime();
@@ -159,6 +168,7 @@ void Process::execute() {
     }
 }
 
+//Set time when process has been termintated
 void Process::setTerminateTime(int t) {
     terminateTime = t;
 }
