@@ -19,6 +19,7 @@ Scheduler::Scheduler() {
     terminated = false;
 }
 
+//Calculate the time slice of a process based on the given formula
 int Scheduler::calculateTimeSlice(Process* p) {
     if (p->getPriority() < 100)
         timeSlice = (140 - p->getPriority()) * 20;
@@ -27,12 +28,15 @@ int Scheduler::calculateTimeSlice(Process* p) {
     return timeSlice;
 }
 
+//Calculate the priority of a process based on the given formula
 int Scheduler::calculatePriority(Process* p) {
     fstream out;
+    //Update priority whenever process executes twice
     if (p->getCpuIteration() % 2 == 0) {
         int bonus = floor((p->getWaitingTime() * 10) / (clk->getTime() - p->getArrivalTime()));
         int newPriority = max(100, min((p->getPriority() - bonus + 5), 139));
         out.open("output.txt", std::ios_base::app);
+        //Lock thread access to printing to output.txt
         print->lock();
         out << "TIME " << clk->getTime() << ", " << p->getProcessID() << ", priority updated to " << newPriority << endl;
         print->unlock();
@@ -43,6 +47,7 @@ int Scheduler::calculatePriority(Process* p) {
 
 }
 
+//Swap active and expired queues, and sort each based on priority
 void Scheduler::swapFlag() {
     q2.updateFlag();
     q1.updateFlag();
@@ -50,7 +55,9 @@ void Scheduler::swapFlag() {
     q1.sort();
 }
 
+//Add process to the queue
 void Scheduler::addProcess(Process* p) {
+    //Chekc if process is new and has been executed
     if (p->getCpuIteration() == 0) {
         fstream out;
         out.open("output.txt", std::ios_base::app);
@@ -58,6 +65,7 @@ void Scheduler::addProcess(Process* p) {
         out << "TIME " << clk->getTime() << ", " << p->getProcessID() << " ARRIVED" << endl;
         print->unlock();
     }
+    //Add process only to the expired queue (flag = false means it is the expired queue)
     if (q1.getFlag() == false) {
         q1.addProcess(p);
     }
@@ -66,10 +74,12 @@ void Scheduler::addProcess(Process* p) {
     }
 }
 
+//Set the clcok for the scheduler
 void Scheduler::setClock(Clock* c) {
     clk = c;
 }
 
+//Return the current active queue
 ProcessQueue* Scheduler::getActiveQueue() {
     if (q1.getFlag())
         return &q1;
@@ -77,6 +87,7 @@ ProcessQueue* Scheduler::getActiveQueue() {
         return &q2;
 }
 
+//Return the current expired queue
 ProcessQueue* Scheduler::getExpiredQueue() {
     if (!q1.getFlag())
         return &q1;
@@ -89,10 +100,12 @@ void Scheduler::schedule() {
     ProcessQueue* expired = getExpiredQueue();
     Process* tempProcess;
     fstream out;
-
     out.open("output.txt", std::ios_base::app);
+    
     while (true) {
+        //Check if both queues are empty and all processes have been executed
         if (terminated && q1.checkEmpty() && q2.checkEmpty()) {
+            //Join all process threads and stop the clock
             joinThreadVector();
             clk->setStartFlag(false);
             break;
@@ -100,6 +113,8 @@ void Scheduler::schedule() {
         while (q1.checkEmpty() && q2.checkEmpty()) {
 
         }
+        
+        //If active queue is empty, swap flags and reinitialize active & expired queues
         if (active->checkEmpty()) {
             arrival->lock();
             swapFlag();
@@ -110,6 +125,8 @@ void Scheduler::schedule() {
 
         tempProcess = active->removeProcess();
         timeSlice = calculateTimeSlice(tempProcess);
+        
+        //Check if its the first execution of a process
         if (tempProcess->getCpuIteration() == 0) {
             tempProcess->setState("STARTED");
             thread th(&Process::execute, tempProcess);
@@ -126,6 +143,7 @@ void Scheduler::schedule() {
             print->unlock();
 
         }
+        //Simulate process execution for a timeslice by halting scheduler and letting the clock run
         sleepScheduler();
 
         tempProcess->setState("PAUSED");
@@ -133,6 +151,8 @@ void Scheduler::schedule() {
             print->lock();
             out << "TIME " << clk->getTime() << ", " << tempProcess->getProcessID() << " PAUSED" << endl;
             print->unlock();
+            
+            //Claclulate and set the new priority of a process
             tempProcess->setPriority(calculatePriority(tempProcess));
             addProcess(tempProcess);
             
@@ -145,11 +165,13 @@ void Scheduler::schedule() {
 
 void Scheduler::sleepScheduler() {
     int startClk = clk->getTime();
+    //Infinite loop till simulated time reaches required clock time ie, process has executed for a timeslice
     while (timeSlice + startClk != clk->getTime()) {
 
     }
 }
 
+//Set the termianted flag for when scheduler needs to be terminated
 void Scheduler::setTerminated(bool flag) {
     terminated = flag;
 }
@@ -158,6 +180,7 @@ bool Scheduler::getTerminated() {
     return terminated;
 }
 
+//Function to join all process threads
 void Scheduler::joinThreadVector() {
     for (int i = 0; i < threadVector.size(); i++) {
         if (threadVector.at(i).joinable()) {
