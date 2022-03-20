@@ -15,41 +15,46 @@
 using namespace std;
 
 void startUp();
-void sleepScheduler(int timeSlice);
 void sort();
 int minIndex(int sortedIndex);
 void insertMinToRear(int min_index);
 
 int process_count;
-queue<Process*>* processList = new queue<Process*>();
+queue<Process*>* processList = new queue<Process*>(); //Queue of pointers to processes taken from input.txt
 Clock* timer = new Clock();
 Scheduler* sched = new Scheduler();
 
 int main() {
 
     startUp();
-    sort();
+    sort(); //Sort the queue of process pointers by arrival time
 
     mutex* arrival = new mutex();
     mutex* print = new mutex();
 
-    sched->setClock(timer);
+    sched->setClock(timer); //Pass clock pointer to the scheduler
+    
     sched->setArrivalMutex(arrival);
     sched->setPrintMutex(print);
+    
     thread th2(&Clock::startClock, timer);
-    thread th(&Scheduler::schedule, sched); 
+    thread th(&Scheduler::schedule, sched);
+    
     while (processList->size() != 0) {
+        //Lock thread access for getting arrival time
         arrival->lock();
         if (processList->front()->getArrivalTime() == timer->getTime()) {
             processList->front()->setClock(timer);
             processList->front()->setPrintMutex(print);
+            //Add process to the scheduler
             sched->addProcess(processList->front());
             processList->pop();
         }
         arrival->unlock();
 
     }
-
+    
+    //Check if all processes have been scheduled and then join the threads
     sched->setTerminated(true);
     th.join();
     th2.join();
@@ -57,13 +62,7 @@ int main() {
 
 }
 
-void sleepScheduler(int timeSlice) {
-    int startclk = timer->getTime();
-    while ((startclk + timeSlice) != timer->getTime()) {
-
-    }
-}
-
+//Get process info from input.txt file and store as process pointer in queue
 void startUp()
 {
     fstream myFile;
@@ -90,7 +89,9 @@ void startUp()
                     int burst = stoi(line.substr(0, line.find_first_of(" ")));
                     line = line.substr(line.find_first_of(" ") + 1);
                     int priority = stoi(line.substr(0, line.find_first_of("\n")));
+                    //Make a pointer fort he newly created process
                     Process* tempProcess = new Process(p_id, arrival, burst, priority);
+                    //Store the pointer into the queue of process pointers
                     processList->push(tempProcess);
                     line = "";
                 }
@@ -146,6 +147,7 @@ void insertMinToRear(int min_index)
     processList->push(min_val);
 }
 
+//Function to sort queue by arrival time
 void sort()
 {
     for (int i = 1; i <= processList->size(); i++)
