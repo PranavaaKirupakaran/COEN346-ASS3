@@ -23,10 +23,12 @@ Clock::~Clock() {
 
 }
 
+//Set start value for clock
 void Clock::setTime(int value) {
     time = value;
 }
 
+//Get current simulated clock time
 int Clock::getTime() {
     return time;
 }
@@ -39,6 +41,7 @@ bool Clock::getStartFlag() {
     return startFlag;
 }
 
+//Start the simulated clock time
 void Clock::startClock() {
     std::cout << "Start Clock" << std::endl;
     while (startFlag) {
