@@ -57,7 +57,7 @@ void Scheduler::swapFlag() {
 
 //Add process to the queue
 void Scheduler::addProcess(Process* p) {
-    //Chekc if process is new and has been executed
+    //Check if process is new and has never been executed
     if (p->getCpuIteration() == 0) {
         fstream out;
         out.open("output.txt", std::ios_base::app);
@@ -74,7 +74,7 @@ void Scheduler::addProcess(Process* p) {
     }
 }
 
-//Set the clcok for the scheduler
+//Set the clock for the scheduler
 void Scheduler::setClock(Clock* c) {
     clk = c;
 }
@@ -103,7 +103,7 @@ void Scheduler::schedule() {
     out.open("output.txt", std::ios_base::app);
     
     while (true) {
-        //Check if both queues are empty and all processes have been executed
+        //Check if both queues are empty and all processes have been added to the scheduler
         if (terminated && q1.checkEmpty() && q2.checkEmpty()) {
             //Join all process threads and stop the clock
             joinThreadVector();
