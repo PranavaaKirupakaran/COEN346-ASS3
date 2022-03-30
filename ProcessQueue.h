@@ -12,7 +12,7 @@
 #include <iostream>
 #include <stdio.h>
 #include <queue>
-#include "Process.h"
+#include "Process.cpp"
 
 using namespace std;
 

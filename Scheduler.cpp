@@ -101,8 +101,10 @@ void Scheduler::schedule() {
     Process* tempProcess;
     fstream out;
     out.open("output.txt", std::ios_base::app);
+    int clktime = 0;
     
     while (true) {
+        clktime = clk->getTime();
         //Check if both queues are empty and all processes have been added to the scheduler
         if (terminated && q1.checkEmpty() && q2.checkEmpty()) {
             //Join all process threads and stop the clock
@@ -131,7 +133,7 @@ void Scheduler::schedule() {
             tempProcess->setState("STARTED");
             thread th(&Process::execute, tempProcess);
             print->lock();
-            out << "TIME " << clk->getTime() << ", " << tempProcess->getProcessID() << " STARTED, GRANTED " << timeSlice << endl;
+            out << "TIME " << clktime << ", " << tempProcess->getProcessID() << " STARTED, GRANTED " << timeSlice << endl;
             print->unlock();
             threadVector.push_back(move(th));
         }
@@ -139,7 +141,7 @@ void Scheduler::schedule() {
 
             tempProcess->setState("RESUMED");
             print->lock();
-            out << "TIME " << clk->getTime() << ", " << tempProcess->getProcessID() << " RESUMED, GRANTED " << timeSlice << endl;
+            out << "TIME " << clktime << ", " << tempProcess->getProcessID() << " RESUMED, GRANTED " << timeSlice << endl;
             print->unlock();
 
         }
@@ -149,7 +151,7 @@ void Scheduler::schedule() {
         tempProcess->setState("PAUSED");
         if (tempProcess->getState() != "TERMINATED") {
             print->lock();
-            out << "TIME " << clk->getTime() << ", " << tempProcess->getProcessID() << " PAUSED" << endl;
+            out << "TIME " << clktime << ", " << tempProcess->getProcessID() << " PAUSED" << endl;
             print->unlock();
             
             //Claclulate and set the new priority of a process
