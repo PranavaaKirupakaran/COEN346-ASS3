@@ -104,7 +104,6 @@ void Scheduler::schedule() {
     int clktime = 0;
     
     while (true) {
-        clktime = clk->getTime();
         //Check if both queues are empty and all processes have been added to the scheduler
         if (terminated && q1.checkEmpty() && q2.checkEmpty()) {
             //Join all process threads and stop the clock
@@ -115,7 +114,6 @@ void Scheduler::schedule() {
         while (q1.checkEmpty() && q2.checkEmpty()) {
 
         }
-        
         //If active queue is empty, swap flags and reinitialize active & expired queues
         if (active->checkEmpty()) {
             arrival->lock();
@@ -124,7 +122,7 @@ void Scheduler::schedule() {
             expired = getExpiredQueue();
             arrival->unlock();
         }
-
+        clktime = clk->getTime();
         tempProcess = active->removeProcess();
         timeSlice = calculateTimeSlice(tempProcess);
         
@@ -146,7 +144,16 @@ void Scheduler::schedule() {
 
         }
         //Simulate process execution for a timeslice by halting scheduler and letting the clock run
-        sleepScheduler();
+        while(true){
+            if(clktime + 1 == clk->getTime()){
+                cout << "Sleep Start" << endl;
+                this_thread::sleep_for(std::chrono::milliseconds((timeSlice-1)*20));
+                cout << "Sleep End" << endl;
+                break;
+            }
+        }
+        //sleepScheduler();
+        clktime = clk->getTime();
 
         tempProcess->setState("PAUSED");
         if (tempProcess->getState() != "TERMINATED") {
@@ -168,9 +175,11 @@ void Scheduler::schedule() {
 void Scheduler::sleepScheduler() {
     int startClk = clk->getTime();
     //Infinite loop till simulated time reaches required clock time ie, process has executed for a timeslice
+    
     while (timeSlice + startClk != clk->getTime()) {
 
     }
+    
 }
 
 //Set the termianted flag for when scheduler needs to be terminated

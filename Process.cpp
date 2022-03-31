@@ -119,7 +119,7 @@ void Process::execute() {
             cpu_iteration += 1;
             waiting_time += arrival_time - startTimeSlice;
             
-            int timeNow = clktime;
+            int timeNow = clk->getTime();
             while (state == "STARTED") {
                 //Decrement process burst time if simulated clock time has incremented by 1
                 if (clk->getTime() == timeNow + 1) {
@@ -128,6 +128,7 @@ void Process::execute() {
                     if (burst_time == 0) {
                         print->lock();
                         state = "TERMINATED";
+                        clktime = clk->getTime();
                     }
                 }
             }
@@ -146,7 +147,7 @@ void Process::execute() {
             waiting_time += startTimeSlice - endTimeSlice;
             cpu_iteration++;
             
-            int timeNow = clktime;
+            int timeNow = clk->getTime();
             while (state == "RESUMED") {
                 //Decrement process burst time if 1s has passed in simulated time
                 if (clk->getTime() == timeNow + 1) {
@@ -155,6 +156,7 @@ void Process::execute() {
                     if (burst_time == 0) {
                         print->lock();
                         state = "TERMINATED";
+                        clktime = clk->getTime();
                     }
                 }
             }
