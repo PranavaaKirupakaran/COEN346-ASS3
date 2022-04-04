@@ -1,38 +1,32 @@
 #pragma once
 
-//
-//  Clock.hpp
-//  COEN346Scheduler
-//
-//  Created by Rohit Vaidya on 2022-03-13.
-//
-
 #ifndef MEMORYMANAGER_H
 #define MEMORYMANAGER_H
 
 #include <iostream>
-#include <mutex>
 #include <vector>
+#include "Page.h"
 
-class Page {
+class MemoryManager {
 private:
-    int variableId;
+    std::vector<Page*>* availablePages;
+    std::string apiCommand;
+    std::string variableId;
     int variableValue;
-    int last;
-    std::vector<int> history;
+    int timeOut;
 
 public:
-    Page();
-    Page(int id, int value);
-    ~Page();
-    void setVariableID(int id);
-    int getVariableID();
+    MemoryManager();
+    MemoryManager(int noOfPages, int timeOutValue);
+    ~MemoryManager();
+    void setApiCommand(std::string command);
+    std::string getApiCommand();
+    void setVariableId(std::string id);
+    std::string getVariableId();
     void setVariableValue(int value);
     int getVariableValue();
-    void addToHistory(int timeStamp);
-    int getHistoryAt(int position);
-    void setLast(int timeStamp);
-    int getLast();
+    void setTimeOut(int timeOutValue);
+    int getTimeOut();
 
 };
 

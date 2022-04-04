@@ -144,15 +144,7 @@ void Scheduler::schedule() {
 
         }
         //Simulate process execution for a timeslice by halting scheduler and letting the clock run
-        while(true){
-            if(clktime + 1 == clk->getTime()){
-                cout << "Sleep Start" << endl;
-                this_thread::sleep_for(std::chrono::milliseconds((timeSlice-1)*20));
-                cout << "Sleep End" << endl;
-                break;
-            }
-        }
-        //sleepScheduler();
+        sleepScheduler();
         clktime = clk->getTime();
 
         tempProcess->setState("PAUSED");
@@ -177,7 +169,7 @@ void Scheduler::sleepScheduler() {
     //Infinite loop till simulated time reaches required clock time ie, process has executed for a timeslice
     
     while (timeSlice + startClk != clk->getTime()) {
-
+        this_thread::sleep_for(std::chrono::milliseconds((15)));
     }
     
 }

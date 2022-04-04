@@ -5,7 +5,7 @@
 //  Created by Rohit Vaidya on 2022-03-09.
 //
 
-#include "Scheduler.cpp"
+#include "Scheduler.h"
 #include <iostream>
 #include <stdio.h>
 #include <fstream>

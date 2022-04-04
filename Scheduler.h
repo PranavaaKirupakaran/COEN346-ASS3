@@ -11,7 +11,7 @@
 #include <stdio.h>
 #include <string>
 //#include "Clock.cpp"
-#include "ProcessQueue.cpp"
+#include "ProcessQueue.h"
 #include <thread>
 
 class Scheduler {
