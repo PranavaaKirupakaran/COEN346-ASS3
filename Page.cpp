@@ -1,51 +1,56 @@
-#include "Page.h"
+#include "Page.hpp"
 
 using namespace std;
 
 Page::Page() {
-	variableId, variableValue, last = 0;
-	history = new vector<int>();
+    variableId, variableValue, last = 0;
+    history = new vector<int>();
 }
 
 Page::Page(int id, int value) {
-	variableId = id;
-	variableValue = value;
-	last = 0;
-	history = new vector<int>();
+    variableId = id;
+    variableValue = value;
+    last = 0;
+    history = new vector<int>();
 }
 
 Page::~Page() {
-	delete history;
+    delete history;
 }
 
 void Page::setVariableID(int id) {
-	variableId = id;
+    variableId = id;
 }
 
 int Page::getVariableID() {
-	return variableId;
+    return variableId;
 }
 
 void Page::setVariableValue(int value) {
-	variableValue = value;
+    variableValue = value;
 }
 
 int Page::getVariableValue() {
-	return variableValue;
+    return variableValue;
 }
 
 void Page::addToHistory(int timeStamp) {
-	history->push_back(timeStamp);
+    history->push_back(timeStamp);
 }
 
 int Page::getHistoryAt(int position) {
-	return history->at(position);
+    return history->at(position);
+}
+
+vector<int>* Page::getHistory() {
+    return history;
 }
 
 void Page::setLast(int timeStamp) {
-	last = timeStamp;
+    last = timeStamp;
 }
 
 int Page::getLast() {
-	return last;
+    return last;
 }
+
