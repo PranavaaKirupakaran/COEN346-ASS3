@@ -10,7 +10,9 @@ private:
     int variableId;
     int variableValue;
     int last;
+    int timeout;
     std::vector<int>* history;
+    
 
 public:
     Page();
@@ -22,6 +24,7 @@ public:
     int getVariableValue();
     void addToHistory(int timeStamp);
     int getHistoryAt(int position);
+    std::vector<int>* getHistory();
     void setLast(int timeStamp);
     int getLast();
 
