@@ -5,7 +5,8 @@
 
 #include <iostream>
 #include <vector>
-#include "Page.h"
+#include "Page.hpp"
+#include "Clock.hpp"
 
 class MemoryManager {
 private:
@@ -13,7 +14,9 @@ private:
     std::string apiCommand;
     std::string variableId;
     int variableValue;
+    int accessedPage;
     int timeOut;
+    Clock* clk;
 
 public:
     MemoryManager();
@@ -27,6 +30,11 @@ public:
     int getVariableValue();
     void setTimeOut(int timeOutValue);
     int getTimeOut();
+    void setClock(Clock* timer);
+    Clock* getClock();
+    int getAccessedPage();
+    void setAccessedPage(int pageNumber);
+    void lruk();
 
 };
 
