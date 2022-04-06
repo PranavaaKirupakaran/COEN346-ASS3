@@ -6,6 +6,7 @@
 //
 
 #include "Scheduler.h"
+#include "Command.h"
 #include <iostream>
 #include <stdio.h>
 #include <fstream>
@@ -24,7 +25,8 @@ int cores;
 int noOfPages;
 int K;
 int timeOut;
-queue<Process*>* processList = new queue<Process*>(); //Queue of pointers to processes taken from input.txt
+//queue<Process*>* processList = new queue<Process*>(); //Queue of pointers to processes taken from input.txt
+vector<Command*> commandList;
 Clock* timer = new Clock();
 Scheduler* sched = new Scheduler();
 
@@ -43,7 +45,7 @@ int main() {
     
     thread th2(&Clock::startClock, timer);
     thread th(&Scheduler::schedule, sched);
-    
+    /*
     while (processList->size() != 0) {
         //Lock thread access for getting arrival time
         arrival->lock();
@@ -57,7 +59,7 @@ int main() {
         arrival->unlock();
 
     }
-    
+    */
     //Check if all processes have been scheduled and then join the threads
     sched->setTerminated(true);
     th.join();
@@ -89,14 +91,15 @@ void startUp()
                     line = "";
                 }
                 else {
-                    string p_id = "P" + to_string(i-1);
-                    int arrival = stoi(line.substr(0, line.find_first_of(" ")));
+                    string name = line.substr(0, line.find_first_of(" "));
                     line = line.substr(line.find_first_of(" ") + 1);
-                    int burst = stoi(line.substr(0, line.find_first_of(" ")));
+                    string id = line.substr(0, line.find_first_of(" "));
+                    line = line.substr(line.find_first_of(" ") + 1);
+                    int value = stoi(line.substr(0, line.find_first_of(" ")));
                     //Make a pointer fort he newly created process
-                    Process* tempProcess = new Process(p_id, arrival, burst, 100);
+                    Command* tempCommand = new Command(name, id, value);
                     //Store the pointer into the queue of process pointers
-                    processList->push(tempProcess);
+                    commandList.push_back(tempCommand);
                     line = "";
                 }
             }
@@ -129,6 +132,25 @@ void startUp()
                     timeOut = stoi(line);
                     line = "";
                 }
+            }
+
+            if (processFile.eof())
+                break;
+        }
+    }
+
+    fstream commandFile;
+    string fileName3 = "commands.txt";
+    commandFile.open(fileName3.c_str(), ios::in);
+
+    if (!commandFile) {
+        cout << "Input File does not exist" << endl;
+    }
+    else {
+        string line;
+        while (true) {
+            for (int i = 0; std::getline(commandFile, line); i++) {
+                
             }
 
             if (processFile.eof())
