@@ -11,7 +11,7 @@
 #include <stdio.h>
 #include <string>
 //#include "Clock.cpp"
-#include "ProcessQueue.cpp"
+#include "ProcessQueue.h"
 #include <thread>
 
 class Scheduler {
@@ -25,9 +25,11 @@ private:
     bool terminated;
     std::mutex* arrival;
     std::mutex* print;
+    int core;
 
 public:
     Scheduler();
+    Scheduler(int noCores);
     int calculateTimeSlice(Process* p);
     int calculatePriority(Process* p);
     void swapFlag();
@@ -44,6 +46,8 @@ public:
     std::mutex* getArrivalMutex();
     void setPrintMutex(std::mutex* m);
     std::mutex* getPrintMutex();
+    void setCore(int noCore);
+    int getCore();
 
 };
 #endif /* Scheduler_hpp */

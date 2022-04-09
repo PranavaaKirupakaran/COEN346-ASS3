@@ -16,6 +16,14 @@ using namespace std;
 Scheduler::Scheduler() {
     q2.updateFlag();
     timeSlice = 0;
+    core = 1;
+    terminated = false;
+}
+
+Scheduler::Scheduler(int noCores) {
+    q2.updateFlag();
+    timeSlice = 0;
+    core = noCores;
     terminated = false;
 }
 
@@ -144,15 +152,7 @@ void Scheduler::schedule() {
 
         }
         //Simulate process execution for a timeslice by halting scheduler and letting the clock run
-        while(true){
-            if(clktime + 1 == clk->getTime()){
-                cout << "Sleep Start" << endl;
-                this_thread::sleep_for(std::chrono::milliseconds((timeSlice-1)*20));
-                cout << "Sleep End" << endl;
-                break;
-            }
-        }
-        //sleepScheduler();
+        sleepScheduler();
         clktime = clk->getTime();
 
         tempProcess->setState("PAUSED");
@@ -177,7 +177,7 @@ void Scheduler::sleepScheduler() {
     //Infinite loop till simulated time reaches required clock time ie, process has executed for a timeslice
     
     while (timeSlice + startClk != clk->getTime()) {
-
+        this_thread::sleep_for(std::chrono::milliseconds((15)));
     }
     
 }
@@ -214,4 +214,12 @@ void Scheduler::setPrintMutex(mutex* m) {
 
 mutex* Scheduler::getPrintMutex() {
     return print;
+}
+
+void Scheduler::setCore(int noCore) {
+    core = noCore;
+}
+
+int Scheduler::getCore() {
+    return core;
 }

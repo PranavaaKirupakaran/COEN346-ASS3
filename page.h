@@ -1,36 +1,30 @@
 #pragma once
-
-//
-//  Clock.hpp
-//  COEN346Scheduler
-//
-//  Created by Rohit Vaidya on 2022-03-13.
-//
-
 #ifndef PAGE_H
 #define PAGE_H
 
 #include <iostream>
-#include <mutex>
 #include <vector>
 
 class Page {
 private:
-    int variableId;
+    std::string variableId;
     int variableValue;
     int last;
-    std::vector<int> history;
+    int timeout;
+    std::vector<int>* history;
+
 
 public:
     Page();
     Page(int id, int value);
     ~Page();
-    void setVariableID(int id);
-    int getVariableID();
+    void setVariableID(std::string id);
+    std::string getVariableID();
     void setVariableValue(int value);
     int getVariableValue();
     void addToHistory(int timeStamp);
     int getHistoryAt(int position);
+    std::vector<int>* getHistory();
     void setLast(int timeStamp);
     int getLast();
 

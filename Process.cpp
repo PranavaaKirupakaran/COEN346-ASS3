@@ -107,56 +107,43 @@ Clock* Process::getClock() {
 }
 
 void Process::execute() {
-    int startTimeSlice = 0, endTimeSlice = 0;
+    int startTimeSlice = 0, endTimeSlice = 0, deltaTimeSlice = 0;
     string prevState = "";
-    int clktime = 0;
     while (true) {
-        clktime = clk->getTime();
-        //Check the current state of the process
         if (state == "STARTED") {
-            startTimeSlice = clktime;
-            //Update cpu_iteration to show process is not new and has begun execution
+            startTimeSlice = clk->getTime();
             cpu_iteration += 1;
             waiting_time += arrival_time - startTimeSlice;
-            
             int timeNow = clk->getTime();
             while (state == "STARTED") {
-                //Decrement process burst time if simulated clock time has incremented by 1
                 if (clk->getTime() == timeNow + 1) {
                     burst_time--;
                     timeNow = clk->getTime();
                     if (burst_time == 0) {
                         print->lock();
                         state = "TERMINATED";
-                        clktime = clk->getTime();
                     }
                 }
             }
         }
-        
         if (state == "PAUSED") {
-            endTimeSlice = clktime;
-            //Stay in Paused state till state changed by scheduler
+            endTimeSlice = clk->getTime();
             while (state == "PAUSED") {
 
             }
         }
-        
         if (state == "RESUMED") {
-            startTimeSlice = clktime;
+            startTimeSlice = clk->getTime();
+            int timeNow = clk->getTime();
             waiting_time += startTimeSlice - endTimeSlice;
             cpu_iteration++;
-            
-            int timeNow = clk->getTime();
             while (state == "RESUMED") {
-                //Decrement process burst time if 1s has passed in simulated time
                 if (clk->getTime() == timeNow + 1) {
                     burst_time--;
                     timeNow = clk->getTime();
                     if (burst_time == 0) {
                         print->lock();
                         state = "TERMINATED";
-                        clktime = clk->getTime();
                     }
                 }
             }
@@ -165,14 +152,13 @@ void Process::execute() {
         if (state == "TERMINATED") {
             fstream out;
             out.open("output.txt", std::ios_base::app);
-            out << "TIME " << clktime << ", " << process_id << " " << state << endl;
+            out << "TIME " << clk->getTime() << ", " << process_id << " " << state << endl;
             print->unlock();
             break;
         }
     }
 }
 
-//Set time when process has been termintated
 void Process::setTerminateTime(int t) {
     terminateTime = t;
 }

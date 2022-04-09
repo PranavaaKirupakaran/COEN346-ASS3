@@ -8,7 +8,6 @@
 
 using namespace std;
 
-//Set queue as active upon initialization
 ProcessQueue::ProcessQueue() {
     flag = true;
 }
@@ -25,7 +24,6 @@ void ProcessQueue::addProcess(Process* p) {
     plist.push(p);
 }
 
-//change flag of queue
 void ProcessQueue::updateFlag() {
     flag = !flag;
 }
@@ -34,7 +32,6 @@ bool ProcessQueue::getFlag() {
     return flag;
 }
 
-//Return a pointer to a process
 Process* ProcessQueue::removeProcess() {
     Process* temp = plist.front();
     plist.pop();
@@ -60,12 +57,14 @@ int ProcessQueue::minIndex(int sortedIndex)
             min_index = i;
             min_val = curr->getPriority();
         }
-        plist.push(curr);  
+        plist.push(curr);  // This is enqueue() in
+                       // C++ STL
     }
     return min_index;
 }
 
-// Moves given minimum element to rear of queue
+// Moves given minimum element to rear of
+// queue
 void ProcessQueue::insertMinToRear(int min_index)
 {
     Process* min_val;
@@ -82,7 +81,6 @@ void ProcessQueue::insertMinToRear(int min_index)
     plist.push(min_val);
 }
 
-//Sort queue based on priority
 void ProcessQueue::sort()
 {
     for (int i = 1; i <= plist.size(); i++)

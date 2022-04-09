@@ -10,7 +10,7 @@
 
 #include <stdio.h>
 #include <string>
-#include "Clock.cpp"
+#include "Clock.h"
 #include <mutex>
 
 
